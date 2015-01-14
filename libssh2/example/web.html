@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta charset="UTF-8" />
+
+<script src="emsocket.js"></script>
+<script src="webssh2.js"></script>
+
+<script>
+
+  var c=0;
+
+  function webssh_phase2() {
+    Module.ccall('webssh2_fingerprint','number',[],[]);
+    queue_authcheck();
+  }
+  
+  function queue_connect() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_connect','number',[],[]);
+      if(result != 0) { 
+          if(jss_closed() != true) queue_connect(); 
+          console.debug("connect failed ret: " + result);
+        } else {
+          console.debug("connect completed successfully ret: " + result);
+          if(jss_closed() != true) queue_handshake();
+        }
+    }, 1000);
+  }
+
+  function queue_handshake() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_handshake','number',[],[]);
+      if(result != 0) { 
+          console.debug("handshake failed ret: " + result);
+          if(jss_closed() != true) {
+             if(c < 10) {
+               queue_handshake();
+               c=c+1;
+             }
+          }
+        } else {
+          console.debug("handshake completed successfully ret: " + result);
+          if(jss_closed() != true) webssh_phase2();
+        }
+    }, 500);
+  }
+
+  function queue_authcheck() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_authcheck','number',[],[]);
+      if(result == 0) { 
+        if(jss_closed() != true) queue_authcheck();
+      } else {
+        console.debug("authcheck completed successfully");
+   //     webssh_phase3();
+      }
+    }, 500);
+  }
+
+
+  queue_connect();
+
+  //document.getElementById('comms').innerHTML += "Received: " + e.data + "<br>";
+  //document.getElementById('comms').innerHTML += "Sent: " + data + "<br>";
+
+ window.onbeforeunload = function() {
+   jss_close();
+ };
+
+</script>
+
+</head>
+<body>
+  <input id="sendtext" type="text" />
+  <input type="button" id="sendBtn" value="send" onclick="senddata()"></input>
+
+  <div id='comms'></div>
+
+</body>
+</html>
