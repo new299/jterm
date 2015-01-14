@@ -11,6 +11,7 @@
 
   function webssh_phase2() {
     Module.ccall('webssh2_fingerprint','number',[],[]);
+    c=0;
     queue_authcheck();
   }
   
@@ -49,10 +50,14 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_authcheck','number',[],[]);
       if(result == 0) { 
-        if(jss_closed() != true) queue_authcheck();
+        console.debug("authcheck failed: " + result);
+        if(c < 10) {
+          if(jss_closed() != true) queue_authcheck();
+          c=c+1;
+        }
       } else {
         console.debug("authcheck completed successfully");
-   //     webssh_phase3();
+        webssh_phase3();
       }
     }, 500);
   }

@@ -100,7 +100,7 @@ static char *userauth_list(LIBSSH2_SESSION *session, const char *username,
                                      (unsigned char *)"none", 4);
         if (rc == LIBSSH2_ERROR_EAGAIN) {
             _libssh2_error(session, LIBSSH2_ERROR_EAGAIN,
-                           "Would block requesting userauth list");
+                           "Would block requesting userauth list 1");
             return NULL;
         }
         /* now free the packet that was sent */
@@ -118,14 +118,19 @@ static char *userauth_list(LIBSSH2_SESSION *session, const char *username,
     }
 
     if (session->userauth_list_state == libssh2_NB_state_sent) {
+        _libssh2_error(session, LIBSSH2_ERROR_EAGAIN,
+                       "pre requirev");
+        
         rc = _libssh2_packet_requirev(session, reply_codes,
                                       &session->userauth_list_data,
                                       &session->userauth_list_data_len, 0,
                                       NULL, 0,
                                       &session->userauth_list_packet_requirev_state);
+        _libssh2_error(session, LIBSSH2_ERROR_EAGAIN,
+                       "post requirev");
         if (rc == LIBSSH2_ERROR_EAGAIN) {
             _libssh2_error(session, LIBSSH2_ERROR_EAGAIN,
-                           "Would block requesting userauth list");
+                           "Would block requesting userauth list 2");
             return NULL;
         } else if (rc) {
             _libssh2_error(session, rc, "Failed getting response");
@@ -1184,7 +1189,7 @@ _libssh2_userauth_publickey(LIBSSH2_SESSION *session,
                                   &session->userauth_pblc_packet_requirev_state);
     if (rc == LIBSSH2_ERROR_EAGAIN) {
         return _libssh2_error(session, LIBSSH2_ERROR_EAGAIN,
-                              "Would block requesting userauth list");
+                              "Would block requesting userauth list 3");
     } else if (rc) {
         session->userauth_pblc_state = libssh2_NB_state_idle;
         return _libssh2_error(session, LIBSSH2_ERROR_PUBLICKEY_UNVERIFIED,

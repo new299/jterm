@@ -1227,6 +1227,7 @@ _libssh2_packet_requirev(LIBSSH2_SESSION *session,
     if (_libssh2_packet_askv(session, packet_types, data, data_len, match_ofs,
                              match_buf, match_len) == 0) {
         /* One of the packets listed was available in the packet brigade */
+                    _libssh2_debug(session, LIBSSH2_TRACE_CONN,"reqv1");
         state->start = 0;
         return 0;
     }
@@ -1236,9 +1237,11 @@ _libssh2_packet_requirev(LIBSSH2_SESSION *session,
     }
 
     while (session->socket_state != LIBSSH2_SOCKET_DISCONNECTED) {
+                    _libssh2_debug(session, LIBSSH2_TRACE_CONN,"reqv2");
         int ret = _libssh2_transport_read(session);
         if ((ret < 0) && (ret != LIBSSH2_ERROR_EAGAIN)) {
             state->start = 0;
+                    _libssh2_debug(session, LIBSSH2_TRACE_CONN,"reqv3");
             return ret;
         }
         if (ret <= 0) {
@@ -1250,12 +1253,14 @@ _libssh2_packet_requirev(LIBSSH2_SESSION *session,
                 return LIBSSH2_ERROR_TIMEOUT;
             }
             else if (ret == LIBSSH2_ERROR_EAGAIN) {
+                    _libssh2_debug(session, LIBSSH2_TRACE_CONN,"reqv4");
                 return ret;
             }
         }
 
         if (strchr((char *) packet_types, ret)) {
             /* Be lazy, let packet_ask pull it out of the brigade */
+                    _libssh2_debug(session, LIBSSH2_TRACE_CONN,"reqv5");
             return _libssh2_packet_askv(session, packet_types, data,
                                         data_len, match_ofs, match_buf,
                                         match_len);

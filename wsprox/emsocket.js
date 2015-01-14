@@ -69,7 +69,7 @@ function jss_recv(sock,buffer,length,flags) {
   for(n=0;n<length;n++) {
     if(n<ws_buffer.length) {
       setValue(buffer+n,ws_buffer[n],'i8');
-      console.debug("sending: " + ws_buffer[n]);
+//      console.debug("sending: " + ws_buffer[n]);
       recv_len++;
     }
   }

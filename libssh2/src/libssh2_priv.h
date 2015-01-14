@@ -87,7 +87,7 @@
 #endif
 
 #ifdef HAVE_SYS_SOCKET_H
-# include <emsocket.h>
+# include "../../wsprox/emsocket.h"
 #endif
 #ifdef HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>

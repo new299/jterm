@@ -7,7 +7,7 @@ pem.lo: pem.c ../src/libssh2_priv.h ../src/libssh2_config.h \
   /home/new/ems/emsdk_portable/emscripten/master/system/include/libc/sys/poll.h \
   /home/new/ems/emsdk_portable/emscripten/master/system/include/libc/poll.h \
   /home/new/ems/emsdk_portable/emscripten/master/system/include/libc/sys/uio.h \
-  ../src/emsocket.h \
+  ../src/../../wsprox/emsocket.h \
   /home/new/ems/emsdk_portable/emscripten/master/system/include/emscripten/emscripten.h \
   /home/new/ems/emsdk_portable/emscripten/master/system/include/libc/sys/socket.h \
   /home/new/ems/emsdk_portable/emscripten/master/system/include/libc/bits/socket.h \
@@ -90,7 +90,7 @@ pem.lo: pem.c ../src/libssh2_priv.h ../src/libssh2_config.h \
 
 /home/new/ems/emsdk_portable/emscripten/master/system/include/libc/sys/uio.h:
 
-../src/emsocket.h:
+../src/../../wsprox/emsocket.h:
 
 /home/new/ems/emsdk_portable/emscripten/master/system/include/emscripten/emscripten.h:
 

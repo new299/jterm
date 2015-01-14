@@ -8,6 +8,7 @@
  */
 
 #include "libssh2_config.h"
+#include "../libssh2/src/libssh2_priv.h"
 #include <libssh2.h>
 #include <libssh2_sftp.h>
 
@@ -25,8 +26,8 @@
 
 const char *keyfile1="~/.ssh/id_rsa.pub";
 const char *keyfile2="~/.ssh/id_rsa";
-const char *username="username";
-const char *password="password";
+const char *username="new";
+const char *password="111";
 
 
 static void kbd_callback(const char *name, int name_len,
@@ -108,18 +109,42 @@ int webssh2_fingerprint() {
     return 0;
 }
 
+void debug(char *str) {
+    char buf[2048];
+    strcpy(buf,"console.log('");
+    strcpy(buf+strlen(buf),str);
+    strcpy(buf+strlen(buf),"');");
+    emscripten_run_script(buf);
+}
+
 //PHASE4
 int webssh2_authcheck() {
 
     /* check what authentication methods are available */
     userauthlist = libssh2_userauth_list(session, username, strlen(username));
     //rc = _libssh2_wait_socket(sess, entry_time);
-    if(libssh2_session_last_errno(session) == LIBSSH2_ERROR_EAGAIN) return 0;
-    else {
+
+    //fprintf(stderr, "Session state auth: %d",(session->userauth_list_state));
+    char buf[1024];
+    sprintf(buf,"Session errno: %d",libssh2_session_last_errno(session));
+    debug(buf);
+
+    //if(libssh2_session_last_errno(session) == LIBSSH2_ERROR_EAGAIN) return 0;
+    if(userauthlist != NULL) {
       fprintf(stderr, "Authentication methods: %s\n", userauthlist);
       return 1;
-    }
+    } else return 0;
 
+}
+
+int webssh2_authenticate() {
+        /* We could authenticate via password */
+        if (libssh2_userauth_password(session, username, password)) {
+            fprintf(stderr, "\tAuthentication by password failed!\n");
+            goto shutdown;
+        } else {
+            fprintf(stderr, "\tAuthentication by password succeeded.\n");
+        }
 }
 
 int webssh2_negotiate() {
