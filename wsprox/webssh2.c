@@ -27,7 +27,7 @@
 const char *keyfile1="~/.ssh/id_rsa.pub";
 const char *keyfile2="~/.ssh/id_rsa";
 const char *username="new";
-const char *password="111";
+const char *password="1";
 
 
 static void kbd_callback(const char *name, int name_len,
@@ -141,9 +141,11 @@ int webssh2_authenticate() {
         /* We could authenticate via password */
         if (libssh2_userauth_password(session, username, password)) {
             fprintf(stderr, "\tAuthentication by password failed!\n");
-            goto shutdown;
+            //goto shutdown;
+            return 0;
         } else {
             fprintf(stderr, "\tAuthentication by password succeeded.\n");
+            return 1;
         }
 }
 

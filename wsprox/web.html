@@ -56,8 +56,25 @@
           c=c+1;
         }
       } else {
+        c=0;
         console.debug("authcheck completed successfully");
-        webssh_phase3();
+        queue_authenticate();
+      }
+    }, 500);
+  }
+  
+  function queue_authenticate() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_authenticate','number',[],[]);
+      if(result == 0) { 
+        console.debug("authenatication failed: " + result);
+        if(c < 10) {
+          if(jss_closed() != true) queue_authenticate();
+          c=c+1;
+        }
+      } else {
+        console.debug("authentication completed successfully");
+//        queue_authenticate();
       }
     }, 500);
   }
