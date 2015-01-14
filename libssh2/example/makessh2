@@ -1,1 +1,1 @@
-emcc ssh2.c ../src/emsocket.c -I../src -I../include -I../../openssl-1.0.1j/include -lssh2 -lssl -lcrypto  -L../../openssl-1.0.1j -L../src/.libs -static
+emcc ssh2.c ../../wxprox/emsocket.c -I../src -I../include -I../../openssl-1.0.1j/include -lssh2 -lssl -lcrypto  -L../../openssl-1.0.1j -L../src/.libs -static
