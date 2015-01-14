@@ -149,7 +149,7 @@ int webssh2_authenticate() {
         }
 }
 
-int webssh2_negotiate() {
+int webssh2_unusedjunkauth() {
 
     if (strstr(userauthlist, "password") != NULL) {
         auth_pw |= 1;
@@ -166,7 +166,7 @@ int webssh2_negotiate() {
         /* We could authenticate via password */
         if (libssh2_userauth_password(session, username, password)) {
             fprintf(stderr, "\tAuthentication by password failed!\n");
-            goto shutdown;
+//            goto shutdown;
         } else {
             fprintf(stderr, "\tAuthentication by password succeeded.\n");
         }
@@ -176,7 +176,7 @@ int webssh2_negotiate() {
                                                   &kbd_callback) ) {
             fprintf(stderr,
                 "\tAuthentication by keyboard-interactive failed!\n");
-            goto shutdown;
+//            goto shutdown;
         } else {
             fprintf(stderr,
                 "\tAuthentication by keyboard-interactive succeeded.\n");
@@ -186,39 +186,64 @@ int webssh2_negotiate() {
         if (libssh2_userauth_publickey_fromfile(session, username, keyfile1,
                                                 keyfile2, password)) {
             fprintf(stderr, "\tAuthentication by public key failed!\n");
-            goto shutdown;
+//            goto shutdown;
         } else {
             fprintf(stderr, "\tAuthentication by public key succeeded.\n");
         }
     } else {
         fprintf(stderr, "No supported authentication methods found!\n");
-        goto shutdown;
+//        goto shutdown;
     }
 
+}
+
+int webssh2_requestshell() {
     /* Request a shell */
     if (!(channel = libssh2_channel_open_session(session))) {
         fprintf(stderr, "Unable to open a session\n");
-        goto shutdown;
+        return 0;
     }
+    return 1;
+}
 
+int webssh2_setenv() {
     /* Some environment variables may be set,
      * It's up to the server which ones it'll allow though
      */
     libssh2_channel_setenv(channel, "FOO", "bar");
+    return 1;
+}
+
+int webssh2_setterm() {
+
 
     /* Request a terminal with 'vanilla' terminal emulation
      * See /etc/termcap for more options
      */
     if (libssh2_channel_request_pty(channel, "vanilla")) {
         fprintf(stderr, "Failed requesting pty\n");
-        goto skip_shell;
+ //       goto skip_shell;
     }
+  return 1;
+}
+
+int webssh2_getshell() {
 
     /* Open a SHELL on that pty */
     if (libssh2_channel_shell(channel)) {
         fprintf(stderr, "Unable to request shell on allocated pty\n");
-        goto shutdown;
+//        goto shutdown;
+      return 0;
     }
+    return 1;
+}
+
+int webssh2_read() {
+  char buffer[1024];
+  
+  ssize_t res = libssh2_channel_read(channel,buffer,1024); 
+  fprintf(stderr,buffer);
+}
 
     /* At this point the shell can be interacted with using
      * libssh2_channel_read()
@@ -232,19 +257,19 @@ int webssh2_negotiate() {
      * A channel can be closed with: libssh2_channel_close()
      * A channel can be freed with: libssh2_channel_free()
      */
-
+/*
   skip_shell:
     if (channel) {
         libssh2_channel_free(channel);
         channel = NULL;
     }
-
+*/
     /* Other channel types are supported via:
      * libssh2_scp_send()
      * libssh2_scp_recv()
      * libssh2_channel_direct_tcpip()
      */
-
+/*
   shutdown:
 
     libssh2_session_disconnect(session,
@@ -262,3 +287,4 @@ int webssh2_negotiate() {
 
     return 0;
 }
+*/

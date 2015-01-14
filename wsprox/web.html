@@ -73,12 +73,96 @@
           c=c+1;
         }
       } else {
+        c=0;
         console.debug("authentication completed successfully");
-//        queue_authenticate();
+        queue_requestshell();
       }
     }, 500);
   }
 
+  function queue_requestshell() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_requestshell','number',[],[]);
+      if(result == 0) { 
+        console.debug("requestshell failed: " + result);
+        if(c < 10) {
+          if(jss_closed() != true) queue_requestshell();
+          c=c+1;
+        }
+      } else {
+        c=0;
+        console.debug("requestshell completed successfully");
+        queue_setenv();
+      }
+    }, 500);
+  }
+
+  function queue_setenv() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_setenv','number',[],[]);
+      if(result == 0) { 
+        console.debug("setenv failed: " + result);
+        if(c < 10) {
+          if(jss_closed() != true) queue_setenv();
+          c=c+1;
+        }
+      } else {
+        c=0;
+        console.debug("setenv completed successfully");
+        queue_setterm();
+      }
+    }, 500);
+  }
+  
+  function queue_setterm() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_setterm','number',[],[]);
+      if(result == 0) { 
+        console.debug("setterm failed: " + result);
+        if(c < 10) {
+          if(jss_closed() != true) queue_setterm();
+          c=c+1;
+        }
+      } else {
+        c=0;
+        console.debug("setterm completed successfully");
+        queue_getshell();
+      }
+    }, 500);
+  }
+  
+  function queue_getshell() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_getshell','number',[],[]);
+      if(result == 0) { 
+        console.debug("getshell failed: " + result);
+        if(c < 10) {
+          if(jss_closed() != true) queue_getshell();
+          c=c+1;
+        }
+      } else {
+        c=0;
+        console.debug("getshell completed successfully");
+        queue_read();
+      }
+    }, 500);
+  }
+
+  function queue_read() {
+    setTimeout(function() {
+      result = Module.ccall('webssh2_read','number',[],[]);
+      if(result == 0) { 
+        console.debug("read failed: " + result);
+        if(c < 10) {
+          if(jss_closed() != true) queue_read();
+          c=c+1;
+        }
+      } else {
+        c=0;
+        console.debug("read completed successfully");
+      }
+    }, 500);
+  }
 
   queue_connect();
 
