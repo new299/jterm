@@ -1,2 +1,0 @@
-emcc webssh2.c ../src/emsocket.c -I../src -I../include -I../../openssl-1.0.1j/include -lssh2 -lssl -lcrypto  -L../../openssl-1.0.1j -L../src/.libs -static -o webssh2.js -s EXPORTED_FUNCTIONS="['_webssh2_connect','_webssh2_negotiate','_webssh2_handshake','_webssh2_fingerprint']"
-
