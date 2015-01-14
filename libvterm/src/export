@@ -1,0 +1,16 @@
+vterm_screen_get_cell
+vterm_set_size
+vterm_state_get_cursorpos
+vterm_push_bytes
+vterm_new
+vterm_obtain_screen
+vterm_obtain_state
+vterm_state_set_bold_highbright
+vterm_screen_enable_altscreen
+vterm_screen_set_callbacks
+vterm_state_set_backup_callbacks
+vterm_screen_set_damage_merge
+vterm_set_parser_backup_callbacks
+vterm_screen_reset
+vterm_parser_set_utf8
+vterm_free

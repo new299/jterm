@@ -1,0 +1,147 @@
+--------------------
+./configure
+Sun Dec 21 08:16:58 EST 2014
+=== ztest17942.c ===
+extern int getchar();
+int hello() {return getchar();}
+===
+emcc -c ztest17942.c
+... using emcc
+
+Checking for obsessive-compulsive compiler options...
+=== ztest17942.c ===
+int foo() { return 0; }
+===
+emcc -c ztest17942.c
+
+Checking for shared library support...
+=== ztest17942.c ===
+extern int getchar();
+int hello() {return getchar();}
+===
+emcc -w -c ztest17942.c
+cc -shared -o ztest17942.so ztest17942.o
+ztest17942.o: file not recognized: File format not recognized
+collect2: error: ld returned 1 exit status
+(exit code 1)
+No shared library support; try without defining CC and CFLAGS
+Building static library libz.a version 1.2.8 with emcc.
+
+=== ztest17942.c ===
+#include <sys/types.h>
+off64_t dummy = 0;
+===
+emcc -c -D_LARGEFILE64_SOURCE=1 ztest17942.c
+Checking for off64_t... Yes.
+Checking for fseeko... Yes.
+
+=== ztest17942.c ===
+#include <string.h>
+#include <errno.h>
+int main() { return strlen(strerror(errno)); }
+===
+emcc -D_LARGEFILE64_SOURCE=1 -o ztest17942 ztest17942.c
+Checking for strerror... Yes.
+
+=== ztest17942.c ===
+#include <unistd.h>
+int main() { return 0; }
+===
+emcc -c -D_LARGEFILE64_SOURCE=1 ztest17942.c
+Checking for unistd.h... Yes.
+
+=== ztest17942.c ===
+#include <stdarg.h>
+int main() { return 0; }
+===
+emcc -c -D_LARGEFILE64_SOURCE=1 ztest17942.c
+Checking for stdarg.h... Yes.
+
+=== ztest17942.c ===
+#include <stdio.h>
+#include <stdarg.h>
+#include "zconf.h"
+int main()
+{
+#ifndef STDC
+  choke me
+#endif
+  return 0;
+}
+===
+emcc -c -D_LARGEFILE64_SOURCE=1 ztest17942.c
+Checking whether to use vs[n]printf() or s[n]printf()... using vs[n]printf().
+
+=== ztest17942.c ===
+#include <stdio.h>
+#include <stdarg.h>
+int mytest(const char *fmt, ...)
+{
+  char buf[20];
+  va_list ap;
+  va_start(ap, fmt);
+  vsnprintf(buf, sizeof(buf), fmt, ap);
+  va_end(ap);
+  return 0;
+}
+int main()
+{
+  return (mytest("Hello%d\n", 1));
+}
+===
+emcc -D_LARGEFILE64_SOURCE=1 -o ztest17942 ztest17942.c
+Checking for vsnprintf() in stdio.h... Yes.
+
+=== ztest17942.c ===
+#include <stdio.h>
+#include <stdarg.h>
+int mytest(const char *fmt, ...)
+{
+  int n;
+  char buf[20];
+  va_list ap;
+  va_start(ap, fmt);
+  n = vsnprintf(buf, sizeof(buf), fmt, ap);
+  va_end(ap);
+  return n;
+}
+int main()
+{
+  return (mytest("Hello%d\n", 1));
+}
+===
+emcc -c -D_LARGEFILE64_SOURCE=1 ztest17942.c
+Checking for return value of vsnprintf()... Yes.
+
+ALL = static all64
+AR = ar
+ARFLAGS = rc
+CC = emcc
+CFLAGS = -D_LARGEFILE64_SOURCE=1
+CPP =
+EXE =
+LDCONFIG = ldconfig
+LDFLAGS =
+LDSHARED = emcc
+LDSHAREDLIBC = -lc
+OBJC = $(OBJZ) $(OBJG)
+PIC_OBJC = $(PIC_OBJZ) $(PIC_OBJG)
+RANLIB = ranlib
+SFLAGS = -D_LARGEFILE64_SOURCE=1
+SHAREDLIB =
+SHAREDLIBM =
+SHAREDLIBV =
+STATICLIB = libz.a
+TEST = all teststatic test64
+VER = 1.2.8
+Z_U4 =
+exec_prefix = ${prefix}
+includedir = ${prefix}/include
+libdir = ${exec_prefix}/lib
+mandir = ${prefix}/share/man
+prefix = /usr/local
+sharedlibdir = ${libdir}
+uname = Linux 3.16-3-amd64
+--------------------
+
+
