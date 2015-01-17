@@ -22,7 +22,7 @@ endif
 CFILES=$(wildcard src/*.c)
 HFILES=$(wildcard include/*.h)
 OBJECTS=$(CFILES:.c=.o)
-LIBRARY=libvterm.la
+LIBRARY=libvterm.so
 
 BINFILES_SRC=$(wildcard bin/*.c)
 BINFILES=$(BINFILES_SRC:.c=)

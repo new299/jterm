@@ -5,6 +5,7 @@
 <script src="emsocket.js"></script>
 <script src="webssh2.js"></script>
 <script src="webssh2_interface.js"></script>
+<script src="textmatrix.js"></script>
 
 <script>
   
@@ -20,6 +21,9 @@
     Module.writeAsciiToMemory(password, passwordptr);
     result = Module.ccall('webssh2_setuserpass','number',['number','number'],[usernameptr,passwordptr]);
     queue_connect(on_recv);
+    add_textmatrix(80,80);
+    textmatrix_setpos(40,40,' ');
+    textmatrix_setpos(20,20,'C');
   }
 
   window.onbeforeunload = function() {
@@ -55,6 +59,7 @@
   <input type="button" id="sendBtn" value="send" onclick="senddata()"></input><br>
 
   <div id='comms'></div>
+  <div style="display: inline" id='tml'></div>
 
 </body>
 </html>
