@@ -1,12 +1,3 @@
-/*
- * Sample showing how to do SSH2 connect.
- *
- * The sample code has default values for host name, user name, password
- * and path to copy, but you can specify them on the command line like:
- *
- * "ssh2 host user password [-p|-i|-k]"
- */
-
 #include "libssh2_config.h"
 #include "../libssh2/src/libssh2_priv.h"
 #include <libssh2.h>
@@ -26,9 +17,14 @@
 
 const char *keyfile1="~/.ssh/id_rsa.pub";
 const char *keyfile2="~/.ssh/id_rsa";
-const char *username="new";
-const char *password="1";
+const char username[1024];
+const char password[1024];
 
+int webssh2_setuserpass(char *username_in,char *password_in) {
+  strcpy(username,username_in);
+  strcpy(password,password_in);
+  return 1;
+}
 
 static void kbd_callback(const char *name, int name_len,
                          const char *instruction, int instruction_len,
@@ -194,7 +190,7 @@ int webssh2_unusedjunkauth() {
         fprintf(stderr, "No supported authentication methods found!\n");
 //        goto shutdown;
     }
-
+  return 1;
 }
 
 int webssh2_requestshell() {
@@ -210,7 +206,7 @@ int webssh2_setenv() {
     /* Some environment variables may be set,
      * It's up to the server which ones it'll allow though
      */
-    libssh2_channel_setenv(channel, "FOO", "bar");
+    libssh2_channel_setenv(channel, "TERM", "xterm");
     return 1;
 }
 
@@ -238,11 +234,17 @@ int webssh2_getshell() {
     return 1;
 }
 
-int webssh2_read() {
-  char buffer[1024];
-  
-  ssize_t res = libssh2_channel_read(channel,buffer,1024); 
-  fprintf(stderr,buffer);
+int webssh2_read(char *buffer,int size) {
+  buffer[0]=0;
+  ssize_t res = libssh2_channel_read(channel,buffer,size); 
+  printf("read buffer %d %d: %s ***",size,res,buffer);
+  return res;
+}
+
+int webssh2_write(char *buffer,int size) {
+  ssize_t res = libssh2_channel_write(channel,buffer,size); 
+  printf("write buffer %d %d: %s ***",size,res,buffer);
+  return res;
 }
 
     /* At this point the shell can be interacted with using

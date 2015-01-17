@@ -148,37 +148,71 @@
     }, 500);
   }
 
+  function on_recv() {
+    var buffer = Module._malloc(1024);
+    var len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
+   
+    if(len > 0) {   
+      // Convert the resulting string to a JS string
+      
+      setValue(buffer+len,0,'i8');
+      var buffer_str = Pointer_stringify(buffer);
+      document.getElementById('comms').innerHTML += "Received " + len + " : " + buffer_str + "<br>";
+    }
+  }
+
   function queue_read() {
+    jss_recv_cb(on_recv);
     setTimeout(function() {
-      result = Module.ccall('webssh2_read','number',[],[]);
-      if(result == 0) { 
-        console.debug("read failed: " + result);
-        if(c < 10) {
-          if(jss_closed() != true) queue_read();
-          c=c+1;
-        }
-      } else {
-        c=0;
-        console.debug("read completed successfully");
-      }
+      on_recv();
+      queue_read();
     }, 500);
   }
 
-  queue_connect();
+  jss_recv_cb(function() {});
 
-  //document.getElementById('comms').innerHTML += "Received: " + e.data + "<br>";
-  //document.getElementById('comms').innerHTML += "Sent: " + data + "<br>";
 
- window.onbeforeunload = function() {
-   jss_close();
- };
+  function do_connect() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+
+    var usernameptr = Module._malloc(username.length+1);
+    Module.writeAsciiToMemory(username, usernameptr);
+
+    var passwordptr = Module._malloc(password.length+1);
+    Module.writeAsciiToMemory(password, passwordptr);
+    result = Module.ccall('webssh2_setuserpass','number',['number','number'],[usernameptr,passwordptr]);
+    queue_connect();
+  }
+
+  window.onbeforeunload = function() {
+    jss_close();
+  };
+
+  function ssh_send(data) {
+    var mystring = data + "\r\n";
+    var strptr = Module._malloc(mystring.length+1);
+    Module.writeAsciiToMemory(mystring, strptr);
+    setValue(strptr+mystring.length+1,0,'i8');
+  
+    result = Module.ccall('webssh2_write','number',['number','number'],[strptr,mystring.length]);
+  }
+
+  function senddata() {
+    var data = document.getElementById('sendtext').value;
+    ssh_send(data);
+    document.getElementById('comms').innerHTML += "Sent: " + data + "<br>";
+  }
 
 </script>
 
 </head>
 <body>
-  <input id="sendtext" type="text" />
+  Send: <input id="sendtext" type="text" />
   <input type="button" id="sendBtn" value="send" onclick="senddata()"></input>
+  Username: <input id="username" type="text" /><br>
+  Password: <input id="password" type="text" /><br>
+  <input type="button" id="connectBtn" value="connect" onclick="do_connect()"></input>
 
   <div id='comms'></div>
 

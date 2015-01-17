@@ -53,6 +53,8 @@ function jss_send(sock,buffer,length,flags) {
   return length;
 }
 
+var jss_recv_callback;
+
 function jss_recv(sock,buffer,length,flags) {
 
   if(serversocket.readyState == 3) {
@@ -77,8 +79,13 @@ function jss_recv(sock,buffer,length,flags) {
   console.debug("jss_recv returning len: " + recv_len);
 
   ws_buffer = ws_buffer.slice(recv_len,ws_buffer.length);
+
  
   return recv_len;
+}
+
+function jss_recv_cb(recv_cb) {
+  jss_recv_callback = recv_cb;
 }
 
 function jss_socket(domain,type,protocol) {
@@ -123,6 +130,10 @@ function jss_connect(sockfd,addr,addrlen) {
     console.debug("buffer size now: " + ws_buffer.length);
     for(n=0;n<array.length;n++) ws_buffer.push(array[n]);
     console.debug("buffer size now: " + ws_buffer.length);
+
+    if(typeof(jss_recv_callback == "function")) {
+      jss_recv_callback();
+    }
   };
 
   return 0; // success
