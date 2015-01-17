@@ -21,7 +21,7 @@ endif
 
 CFILES=$(wildcard src/*.c)
 HFILES=$(wildcard include/*.h)
-OBJECTS=$(CFILES:.c=.lo)
+OBJECTS=$(CFILES:.c=.o)
 LIBRARY=libvterm.la
 
 BINFILES_SRC=$(wildcard bin/*.c)
@@ -47,29 +47,29 @@ all: $(LIBRARY) $(BINFILES)
 
 $(LIBRARY): $(OBJECTS)
 	@echo LINK $@
-	@$(LIBTOOL) --mode=link --tag=CC $(CC) -rpath $(LIBDIR) -version-info $(VERSION_CURRENT):$(VERSION_REVISION):$(VERSION_AGE) -o $@ $^
+	$(CC) -o $@ $^
 
-src/%.lo: src/%.c $(HFILES_INT)
+src/%.o: src/%.c $(HFILES_INT)
 	@echo CC $<
-	@$(LIBTOOL) --mode=compile --tag=CC $(CC) $(CFLAGS) -o $@ -c $<
+	$(LIBTOOL) --mode=compile --tag=CC $(CC) $(CFLAGS) -o $@ -c $<
 
 src/encoding/%.inc: src/encoding/%.tbl
 	@echo TBL $<
-	@perl -CSD tbl2inc_c.pl $< >$@
+	perl -CSD tbl2inc_c.pl $< >$@
 
-src/encoding.lo: $(INCFILES)
+src/encoding.o: $(INCFILES)
 
 bin/%: bin/%.c $(LIBRARY)
 	@echo CC $<
-	@$(LIBTOOL) --mode=link --tag=CC $(CC) $(CFLAGS) -o $@ $< -lvterm
+	$(LIBTOOL) --mode=link --tag=CC $(CC) $(CFLAGS) -o $@ $< -lvterm
 
-t/harness.lo: t/harness.c $(HFILES)
+t/harness.o: t/harness.c $(HFILES)
 	@echo CC $<
-	@$(LIBTOOL) --mode=compile --tag=CC $(CC) $(CFLAGS) -o $@ -c $<
+	$(LIBTOOL) --mode=compile --tag=CC $(CC) $(CFLAGS) -o $@ -c $<
 
-t/harness: t/harness.lo $(LIBRARY)
+t/harness: t/harness.o $(LIBRARY)
 	@echo LINK $@
-	@$(LIBTOOL) --mode=link --tag=CC $(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(LIBTOOL) --mode=link --tag=CC $(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 .PHONY: test
 test: $(LIBRARY) t/harness
@@ -78,7 +78,7 @@ test: $(LIBRARY) t/harness
 .PHONY: clean
 clean:
 	$(LIBTOOL) --mode=clean rm -f $(OBJECTS)
-	$(LIBTOOL) --mode=clean rm -f t/harness.lo t/harness
+	$(LIBTOOL) --mode=clean rm -f t/harness.o t/harness
 	$(LIBTOOL) --mode=clean rm -f $(LIBRARY)
 
 .PHONY: install
