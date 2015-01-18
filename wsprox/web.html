@@ -21,8 +21,11 @@
     Module.writeAsciiToMemory(password, passwordptr);
     result = Module.ccall('webssh2_setuserpass','number',['number','number'],[usernameptr,passwordptr]);
     queue_connect(on_recv);
-    add_textmatrix(80,80);
-    textmatrix_setpos(40,40,' ');
+
+    Module.ccall('webvterm_init',null,['number','number'],[80,23]);
+
+    add_textmatrix(80,23);
+    textmatrix_setpos(40,20,' ');
     textmatrix_setpos(20,20,'C');
   }
 
@@ -35,11 +38,27 @@
     ssh_send(data);
     document.getElementById('comms').innerHTML += "Sent: " + data + "<br>";
   }
+
+  function redraw() {
+    var bufferptr = Module._malloc(1024);
+    for(var cy=0;cy<23;cy++) {
+      Module.ccall('webvterm_get_row',null,['number','number','number'],[cy,bufferptr,1024]);
+      var buffer_str = Pointer_stringify(bufferptr);
+      console.debug("vterm buffer str " + buffer_str.length + ": " + buffer_str);
+      for(var cx=0;cx<80;cx++) {
+        textmatrix_setpos(cx,cy,buffer_str.substr(cx,1));
+      }
+    }
+  }
   
   function on_recv() {
     var buffer = Module._malloc(1024);
     var len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
     if(len > 0) {
+
+      Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
+      redraw();
+
       // Convert the resulting string to a JS string
       setValue(buffer+len,0,'i8');
       var buffer_str = Pointer_stringify(buffer);
