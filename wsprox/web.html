@@ -11,7 +11,14 @@
   
   function getChar(event) {
 
+    console.debug("kcode: " + event.keyCode);
     if(event.keyCode == 13) return "\n";
+    if(event.keyCode == 8 ) return String.fromCharCode(127);
+
+    if(event.keyCode == 37) return String.fromCharCode(0x1b) + 'O' + 'D';
+    if(event.keyCode == 39) return String.fromCharCode(0x1b) + 'O' + 'C';
+    if(event.keyCode == 38) return String.fromCharCode(0x1b) + 'O' + 'A';
+    if(event.keyCode == 40) return String.fromCharCode(0x1b) + 'O' + 'B';
 
     if (event.which == null) {
       return String.fromCharCode(event.keyCode) // IE
