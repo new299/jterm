@@ -23,3 +23,12 @@ function textmatrix_setpos(x,y,c) {
 
   document.getElementById('l' + y).innerHTML = newline;
 }
+
+function textmatrix_setline(y,newline) {
+  document.getElementById('l' + y).innerHTML = newline;
+}
+
+function textmatrix_getline(y) {
+  var line = document.getElementById('l' + y).innerHTML;
+  return line;
+}

@@ -334,7 +334,7 @@ void webvterm_init(int cols_in,int rows_in) {
 
 void webvterm_recv(char *buffer,int len) {
   buffer[len]=0;
-  printf("vterm pushing: %s\n",buffer);
+  //printf("vterm pushing: %s\n",buffer);
   if(len > 0) {
     if((buffer != 0) && (len != 0)) {
       vterm_push_bytes(vt, buffer, len);
@@ -376,15 +376,15 @@ void webvterm_get_row(int crow,char *buffer,int len) {
   VTermScreenCell *rowdata=grab_row(crow,&dont_free,&len);
   int xpos=0;
 
-  printf("vterm getrow cols %d\n",cols);
-  printf("vterm getrow len %d\n",len);
+ // printf("vterm getrow cols %d\n",cols);
+ // printf("vterm getrow len %d\n",len);
 
   for(int n=0;n<cols;n++) {
     if(n >= len) break;
 //    uint16_t rtext[1000];
 
     buffer[n] = rowdata[n].chars[0];
-    printf("vterm bchar: %c\n",buffer[n]);
+    //printf("vterm bchar: %c\n",buffer[n]);
     if(buffer[n]==0) buffer[n]=' ';
     buffer[n+1]=0;
 
@@ -392,7 +392,7 @@ void webvterm_get_row(int crow,char *buffer,int len) {
 //    VTermColor bg = row[n].bg;
 
   }
-  printf("in vterm: %s\n",buffer);
+  //printf("in vterm: %s\n",buffer);
 
   if(!dont_free)  free(rowdata);
 

@@ -44,8 +44,8 @@ func forwardtcp(wsconn *websocket.Conn,conn net.Conn) {
     n,err := conn.Read(tcpbuffer)
     if err == io.EOF { fmt.Printf("TCP Read failed"); break; }
     if err == nil {
-      fmt.Printf("Forwarding from tcp to ws: %d bytes: %s\n",n,tcpbuffer)
-      print_binary(tcpbuffer)
+//      fmt.Printf("Forwarding from tcp to ws: %d bytes: %s\n",n,tcpbuffer)
+//      print_binary(tcpbuffer)
       wsconn.WriteMessage(websocket.BinaryMessage,tcpbuffer[:n])
     }
   }
@@ -58,11 +58,11 @@ func forwardws (wsconn *websocket.Conn,conn net.Conn) {
     //wsconn.SetReadDeadline(time.Now().Add(1 * time.Second))
     //wsconn.SetReadDeadline(time.Now().Add(10000000 * time.Nanosecond))
     n,buffer,err := wsconn.ReadMessage()
-    if err == io.EOF { fmt.Printf("WS Read Failed"); break; }
+    if err == io.EOF { fmt.Printf("WS Read Failed %d",n); break; }
     if err == nil {
-      s := string(buffer[:len(buffer)])
-      fmt.Printf("Received (from ws) forwarding to tcp: %d bytes: %s %d\n",len(buffer),s,n)
-      print_binary(buffer)
+//      s := string(buffer[:len(buffer)])
+//      fmt.Printf("Received (from ws) forwarding to tcp: %d bytes: %s %d\n",len(buffer),s,n)
+//      print_binary(buffer)
       conn.Write(buffer)
     }
   }

@@ -74,7 +74,9 @@ int webssh2_connect() {
   sin.sin_addr.s_addr = hostaddr;
   int r = connect(sock, (struct sockaddr*)(&sin), sizeof(struct sockaddr_in));
   session = libssh2_session_init();
-  libssh2_trace(session,LIBSSH2_TRACE_SOCKET | LIBSSH2_TRACE_CONN | LIBSSH2_TRACE_TRANS | LIBSSH2_TRACE_ERROR);
+
+  // uncomment following to enable libssh2 debug trace output
+  // libssh2_trace(session,LIBSSH2_TRACE_SOCKET | LIBSSH2_TRACE_CONN | LIBSSH2_TRACE_TRANS | LIBSSH2_TRACE_ERROR);
   libssh2_session_set_blocking(session,0);
   fprintf(stderr,"session id: %d",session);
   return r;

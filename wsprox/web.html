@@ -62,15 +62,23 @@
     for(var cy=0;cy<23;cy++) {
       Module.ccall('webvterm_get_row',null,['number','number','number'],[cy,bufferptr,1024]);
       var buffer_str = Pointer_stringify(bufferptr);
-      console.debug("vterm buffer str " + buffer_str.length + ": " + buffer_str);
-      for(var cx=0;cx<80;cx++) {
-        textmatrix_setpos(cx,cy,buffer_str.substr(cx,1));
+      
+      var current_line = textmatrix_getline(cy);
+      if(buffer_str != current_line) {
+
+        //console.debug("vterm buffer str " + buffer_str.length + ": " + buffer_str);
+//        for(var cx=0;cx<80;cx++) {
+//          textmatrix_setpos(cx,cy,buffer_str.substr(cx,1));
+//        }
+        textmatrix_setline(cy,buffer_str);
       }
     }
   }
   
+    
+
+  var buffer = Module._malloc(1024);
   function on_recv() {
-    var buffer = Module._malloc(1024);
     var len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
     if(len > 0) {
 
@@ -78,8 +86,8 @@
       redraw();
 
       // Convert the resulting string to a JS string
-      setValue(buffer+len,0,'i8');
-      var buffer_str = Pointer_stringify(buffer);
+//      setValue(buffer+len,0,'i8');
+//      var buffer_str = Pointer_stringify(buffer);
 //      document.getElementById('comms').innerHTML += "Received " + len + " : " + buffer_str + "<br>";
     }
   }

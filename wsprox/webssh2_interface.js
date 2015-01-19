@@ -19,7 +19,7 @@
           console.debug("connect completed successfully ret: " + result);
           if(jss_closed() != true) queue_handshake();
         }
-    }, 1000);
+    }, 100);
   }
 
   function queue_handshake() {
@@ -28,7 +28,7 @@
       if(result != 0) { 
           console.debug("handshake failed ret: " + result);
           if(jss_closed() != true) {
-             if(c < 10) {
+             if(c < 100) {
                queue_handshake();
                c=c+1;
              }
@@ -37,7 +37,7 @@
           console.debug("handshake completed successfully ret: " + result);
           if(jss_closed() != true) webssh_phase2();
         }
-    }, 500);
+    }, 100);
   }
 
   function queue_authcheck() {
@@ -145,16 +145,17 @@
 
   function queue_read() {
     jss_recv_cb(m_on_recv);
-    setTimeout(function() {
-      m_on_recv();
-      queue_read();
-    }, 500);
+//    setTimeout(function() {
+//      m_on_recv();
+//      queue_read();
+//    }, 2000);
   }
 
 
+  var strptr = Module._malloc(1024);
   function ssh_send(data) {
     var mystring = data;// + "\r\n";
-    var strptr = Module._malloc(mystring.length+1);
+//    var strptr = Module._malloc(mystring.length+1);
     Module.writeAsciiToMemory(mystring, strptr);
     setValue(strptr+mystring.length+1,0,'i8');
   
