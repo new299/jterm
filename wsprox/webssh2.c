@@ -55,7 +55,7 @@ LIBSSH2_CHANNEL *channel;
 
 //PHASE1
 int webssh2_connect() {
-  fprintf(stderr,"webssh2_connect\n");
+  //fprintf(stderr,"webssh2_connect\n");
   struct sockaddr_in sin;
 
 
@@ -63,7 +63,7 @@ int webssh2_connect() {
 
   rc = libssh2_init (0);
   if(rc != 0) {
-    fprintf (stderr, "libssh2 initialization failed (%d)\n", rc);
+    //fprintf (stderr, "libssh2 initialization failed (%d)\n", rc);
     return 1;
   }
 
@@ -78,7 +78,7 @@ int webssh2_connect() {
   // uncomment following to enable libssh2 debug trace output
   // libssh2_trace(session,LIBSSH2_TRACE_SOCKET | LIBSSH2_TRACE_CONN | LIBSSH2_TRACE_TRANS | LIBSSH2_TRACE_ERROR);
   libssh2_session_set_blocking(session,0);
-  fprintf(stderr,"session id: %d",session);
+  //fprintf(stderr,"session id: %d",session);
   return r;
 }
 
@@ -99,11 +99,12 @@ int webssh2_fingerprint() {
      * call
      */
     fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
-    fprintf(stderr, "Fingerprint: ");
-    for(i = 0; i < 20; i++) {
-        fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
-    }
-    fprintf(stderr, "\n");
+    //fprintf(stderr, "Fingerprint: ");
+    //TODO: add this to interface
+    //for(i = 0; i < 20; i++) {
+        //fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
+    //}
+    //fprintf(stderr, "\n");
     return 0;
 }
 
@@ -123,9 +124,9 @@ int webssh2_authcheck() {
     //rc = _libssh2_wait_socket(sess, entry_time);
 
     //fprintf(stderr, "Session state auth: %d",(session->userauth_list_state));
-    char buf[1024];
-    sprintf(buf,"Session errno: %d",libssh2_session_last_errno(session));
-    debug(buf);
+    //char buf[1024];
+    //sprintf(buf,"Session errno: %d",libssh2_session_last_errno(session));
+    //debug(buf);
 
     //if(libssh2_session_last_errno(session) == LIBSSH2_ERROR_EAGAIN) return 0;
     if(userauthlist != NULL) {
@@ -239,13 +240,13 @@ int webssh2_getshell() {
 int webssh2_read(char *buffer,int size) {
   buffer[0]=0;
   ssize_t res = libssh2_channel_read(channel,buffer,size); 
-  printf("read buffer %d %d: %s ***",size,res,buffer);
+  //printf("read buffer %d %d: %s ***",size,res,buffer);
   return res;
 }
 
 int webssh2_write(char *buffer,int size) {
   ssize_t res = libssh2_channel_write(channel,buffer,size); 
-  printf("write buffer %d %d: %s ***",size,res,buffer);
+  //printf("write buffer %d %d: %s ***",size,res,buffer);
   return res;
 }
 

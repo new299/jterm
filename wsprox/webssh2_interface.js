@@ -14,9 +14,9 @@
       result = Module.ccall('webssh2_connect','number',[],[]);
       if(result != 0) { 
           if(jss_closed() != true) queue_connect(); 
-          console.debug("connect failed ret: " + result);
+          //console.debug("connect failed ret: " + result);
         } else {
-          console.debug("connect completed successfully ret: " + result);
+          //console.debug("connect completed successfully ret: " + result);
           if(jss_closed() != true) queue_handshake();
         }
     }, 100);
@@ -26,7 +26,7 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_handshake','number',[],[]);
       if(result != 0) { 
-          console.debug("handshake failed ret: " + result);
+          //console.debug("handshake failed ret: " + result);
           if(jss_closed() != true) {
              if(c < 100) {
                queue_handshake();
@@ -34,7 +34,7 @@
              }
           }
         } else {
-          console.debug("handshake completed successfully ret: " + result);
+          //console.debug("handshake completed successfully ret: " + result);
           if(jss_closed() != true) webssh_phase2();
         }
     }, 100);
@@ -44,14 +44,14 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_authcheck','number',[],[]);
       if(result == 0) { 
-        console.debug("authcheck failed: " + result);
+        //console.debug("authcheck failed: " + result);
         if(c < 50) {
           if(jss_closed() != true) queue_authcheck();
           c=c+1;
         }
       } else {
         c=0;
-        console.debug("authcheck completed successfully");
+        //console.debug("authcheck completed successfully");
         queue_authenticate();
       }
     }, 100);
@@ -61,14 +61,14 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_authenticate','number',[],[]);
       if(result == 0) { 
-        console.debug("authenatication failed: " + result);
+        //console.debug("authenatication failed: " + result);
         if(c < 50) {
           if(jss_closed() != true) queue_authenticate();
           c=c+1;
         }
       } else {
         c=0;
-        console.debug("authentication completed successfully");
+        //console.debug("authentication completed successfully");
         queue_requestshell();
       }
     }, 100);
@@ -78,14 +78,14 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_requestshell','number',[],[]);
       if(result == 0) { 
-        console.debug("requestshell failed: " + result);
+        //console.debug("requestshell failed: " + result);
         if(c < 50) {
           if(jss_closed() != true) queue_requestshell();
           c=c+1;
         }
       } else {
         c=0;
-        console.debug("requestshell completed successfully");
+        //console.debug("requestshell completed successfully");
         queue_setenv();
       }
     }, 100);
@@ -95,14 +95,14 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_setenv','number',[],[]);
       if(result == 0) { 
-        console.debug("setenv failed: " + result);
+        //console.debug("setenv failed: " + result);
         if(c < 50) {
           if(jss_closed() != true) queue_setenv();
           c=c+1;
         }
       } else {
         c=0;
-        console.debug("setenv completed successfully");
+        //console.debug("setenv completed successfully");
         queue_setterm();
       }
     }, 100);
@@ -112,14 +112,14 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_setterm','number',[],[]);
       if(result == 0) { 
-        console.debug("setterm failed: " + result);
+        //console.debug("setterm failed: " + result);
         if(c < 10) {
           if(jss_closed() != true) queue_setterm();
           c=c+1;
         }
       } else {
         c=0;
-        console.debug("setterm completed successfully");
+        //console.debug("setterm completed successfully");
         queue_getshell();
       }
     }, 500);
@@ -129,14 +129,14 @@
     setTimeout(function() {
       result = Module.ccall('webssh2_getshell','number',[],[]);
       if(result == 0) { 
-        console.debug("getshell failed: " + result);
+        //console.debug("getshell failed: " + result);
         if(c < 10) {
           if(jss_closed() != true) queue_getshell();
           c=c+1;
         }
       } else {
         c=0;
-        console.debug("getshell completed successfully");
+        //console.debug("getshell completed successfully");
         queue_read();
       }
     }, 500);
