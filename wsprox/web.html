@@ -10,9 +10,16 @@
 <script>
   
   function getChar(event) {
+    var TABKEY = 9;
+    if(event.keyCode == TABKEY) {
+      if(event.preventDefault) {
+        event.preventDefault();
+      }
+      return "\t";
+   }
 
-//    console.debug("kcode: " + event.keyCode);
-//    console.debug("ctrl: " + event.ctrlKey);
+   console.debug("kcode: " + event.keyCode);
+   console.debug("ctrl: " + event.ctrlKey);
 
     var kcode = event.keyCode;
 
