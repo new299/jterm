@@ -45,7 +45,7 @@
       result = Module.ccall('webssh2_authcheck','number',[],[]);
       if(result == 0) { 
         console.debug("authcheck failed: " + result);
-        if(c < 10) {
+        if(c < 50) {
           if(jss_closed() != true) queue_authcheck();
           c=c+1;
         }
@@ -54,7 +54,7 @@
         console.debug("authcheck completed successfully");
         queue_authenticate();
       }
-    }, 500);
+    }, 100);
   }
   
   function queue_authenticate() {
@@ -62,7 +62,7 @@
       result = Module.ccall('webssh2_authenticate','number',[],[]);
       if(result == 0) { 
         console.debug("authenatication failed: " + result);
-        if(c < 10) {
+        if(c < 50) {
           if(jss_closed() != true) queue_authenticate();
           c=c+1;
         }
@@ -71,7 +71,7 @@
         console.debug("authentication completed successfully");
         queue_requestshell();
       }
-    }, 500);
+    }, 100);
   }
 
   function queue_requestshell() {
@@ -79,7 +79,7 @@
       result = Module.ccall('webssh2_requestshell','number',[],[]);
       if(result == 0) { 
         console.debug("requestshell failed: " + result);
-        if(c < 10) {
+        if(c < 50) {
           if(jss_closed() != true) queue_requestshell();
           c=c+1;
         }
@@ -88,7 +88,7 @@
         console.debug("requestshell completed successfully");
         queue_setenv();
       }
-    }, 500);
+    }, 100);
   }
 
   function queue_setenv() {
@@ -96,7 +96,7 @@
       result = Module.ccall('webssh2_setenv','number',[],[]);
       if(result == 0) { 
         console.debug("setenv failed: " + result);
-        if(c < 10) {
+        if(c < 50) {
           if(jss_closed() != true) queue_setenv();
           c=c+1;
         }
@@ -105,7 +105,7 @@
         console.debug("setenv completed successfully");
         queue_setterm();
       }
-    }, 500);
+    }, 100);
   }
   
   function queue_setterm() {

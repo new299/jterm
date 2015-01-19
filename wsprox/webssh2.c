@@ -218,7 +218,7 @@ int webssh2_setterm() {
     /* Request a terminal with 'vanilla' terminal emulation
      * See /etc/termcap for more options
      */
-    if (libssh2_channel_request_pty(channel, "vanilla")) {
+    if (libssh2_channel_request_pty(channel, "xterm")) {
         fprintf(stderr, "Failed requesting pty\n");
  //       goto skip_shell;
     }
