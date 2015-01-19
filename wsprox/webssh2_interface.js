@@ -153,7 +153,7 @@
 
 
   function ssh_send(data) {
-    var mystring = data + "\r\n";
+    var mystring = data;// + "\r\n";
     var strptr = Module._malloc(mystring.length+1);
     Module.writeAsciiToMemory(mystring, strptr);
     setValue(strptr+mystring.length+1,0,'i8');

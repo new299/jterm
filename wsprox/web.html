@@ -9,6 +9,18 @@
 
 <script>
   
+  function getChar(event) {
+
+    if(event.keyCode == 13) return "\n";
+
+    if (event.which == null) {
+      return String.fromCharCode(event.keyCode) // IE
+    } else if (event.which!=0 && event.charCode!=0) {
+      return String.fromCharCode(event.which)   // the rest
+    } else {
+      return null // special key
+    }
+  }
 
   function do_connect() {
     var username = document.getElementById('username').value;
@@ -27,6 +39,12 @@
     add_textmatrix(80,23);
     textmatrix_setpos(40,20,' ');
     textmatrix_setpos(20,20,'C');
+    document.getElementById('sendtext').onkeypress = function(event) {
+      var char = getChar(event || window.event)
+      if (!char) return // special key
+      ssh_send(char);
+      return false
+    }
   }
 
   window.onbeforeunload = function() {
@@ -62,7 +80,7 @@
       // Convert the resulting string to a JS string
       setValue(buffer+len,0,'i8');
       var buffer_str = Pointer_stringify(buffer);
-      document.getElementById('comms').innerHTML += "Received " + len + " : " + buffer_str + "<br>";
+//      document.getElementById('comms').innerHTML += "Received " + len + " : " + buffer_str + "<br>";
     }
   }
 
@@ -74,8 +92,7 @@
   Username: <input id="username" type="text" /><br>
   Password: <input id="password" type="text" /><br>
   <input type="button" id="connectBtn" value="connect" onclick="do_connect()"></input><br><br>
-  Send: <input id="sendtext" type="text" />
-  <input type="button" id="sendBtn" value="send" onclick="senddata()"></input><br>
+  Send: <input id='sendtext' type="text" />
 
   <div id='comms'></div>
   <div style="display: inline" id='tml'></div>
