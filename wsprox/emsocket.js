@@ -5,21 +5,17 @@ var m_jss_ready = false;
 var m_jss_closed = false;
 var jss_first = true;
 
-var ws_addr;
-var ws_addrlen;
+var m_server_address;
 
 function format_for_ws(buffer,length) {
 
   var send_buffer = new Uint8Array(length);
-//  send_buffer = "";
   dbg_buffer = [];
   for(n=0;n<length;n++) {
     dbg_buffer.push(getValue(buffer+n));
-//    send_buffer = send_buffer + String.fromCharCode(getValue(buffer+n));
     send_buffer[n] = getValue(buffer+n);
   }
 
-  //console.debug("send buffer: " + dbg_buffer);
 
   return send_buffer;
 }
@@ -95,20 +91,40 @@ function jss_socket(domain,type,protocol) {
   return 1;
 }
 
+function jss_gethostbyname(name) {
+  // struct hostent *gethostbyname(const char *name);
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", "http://localhost:8080/dns?name=" + name, false);
+  xmlHttp.send(null);
+  console.debug("hostname: " + xmlHttp.responseText);
+  return xmlHttp.responseText;
+}
+
+function jss_set_server_address(addr) {
+  m_server_address = addr;
+}
+
 function jss_connect(sockfd,addr,addrlen) {
 
   //console.debug("jss_connect");
-  ws_addr = addr;
-  ws_addrlen = addrlen;
 
-  serversocket = new WebSocket("ws://localhost:8080/echo");
+  serversocket = new WebSocket("ws://localhost:8080/con");
   serversocket.binaryType = "arraybuffer";
   serversocket.onopen = function() {
-    m_jss_ready = true;
     //console.debug("websocket open complete");
     //console.debug("open readyState: " + serversocket.readyState);
-//    var address_string = addr_to_string(ws_addr,ws_addrlen);
-    serversocket.send(format_for_ws(ws_addr,ws_addrlen));
+
+    var send_buffer = new Uint8Array(m_server_address.length+1);
+    for(var n=0;n<m_server_address.length;n++) {
+      send_buffer[n] = m_server_address[n].charCodeAt();
+    }
+    send_buffer[m_server_address.length]=0;
+    console.debug("sending addr: " + m_server_address);
+    for(var n=0;n<send_buffer.length;n++) {
+      console.debug(n + " " + send_buffer[n]);
+    }
+    serversocket.send(send_buffer);
+    m_jss_ready = true;
   }
 
   serversocket.onclose = function (e) {
@@ -125,10 +141,10 @@ function jss_connect(sockfd,addr,addrlen) {
     //console.debug("serversocket onmessage received data: " + e.data);
     var array = new Uint8Array(e.data);
 
-    var s = "";
-    for(n=0;n<array.length;n++) {
-      s += array[n] + ",";
-    }
+    //var s = "";
+    //for(n=0;n<array.length;n++) {
+    //  s += array[n] + ",";
+    //}
     //console.debug("serversocket onmessage received data deab: " + s);
     //console.debug("buffer size now: " + ws_buffer.length);
     for(n=0;n<array.length;n++) ws_buffer.push(array[n]);

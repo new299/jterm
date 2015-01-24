@@ -18,8 +18,8 @@
       return "\t";
    }
 
-   console.debug("kcode: " + event.keyCode);
-   console.debug("ctrl: " + event.ctrlKey);
+   //console.debug("kcode: " + event.keyCode);
+   //console.debug("ctrl: " + event.ctrlKey);
 
     var kcode = event.keyCode;
 
@@ -52,9 +52,11 @@
   }
 
   function do_connect() {
+    var serverad = document.getElementById('serverad').value;
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
 
+    jss_set_server_address(serverad);
     var usernameptr = Module._malloc(username.length+1);
     Module.writeAsciiToMemory(username, usernameptr);
 
@@ -126,6 +128,7 @@
 
 </head>
 <body>
+  ServerIP: <input id="serverad" type="text" /><br>
   Username: <input id="username" type="text" /><br>
   Password: <input id="password" type="text" /><br>
   <input type="button" id="connectBtn" value="connect" onclick="do_connect()"></input><br><br>
