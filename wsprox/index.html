@@ -7,6 +7,7 @@
 <script src="webssh2_interface.js"></script>
 <script src="textmatrix.js"></script>
 
+
 <script>
   
   function getChar(event) {
@@ -52,6 +53,7 @@
   }
 
   function do_connect() {
+    document.getElementById('logindisplay').style.display = 'none';
     var serverad = document.getElementById('serverad').value;
     var port     = document.getElementById('port'    ).value;
     var username = document.getElementById('username').value;
@@ -135,7 +137,7 @@
 <link href="login.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-<div class="container">
+<div class="container" id="logindisplay">
     <div class="row">
         <div class="col-md-offset-5 col-md-3">
             <div class="form-login">
@@ -164,7 +166,8 @@
 </div>
   <div id='comms'></div>
   Send: <input id='sendtext' type="text" />
-  <div style="display: inline" id='tml'></div>
+  <br/>
+  <div style="display: inline; font-family: monospace; white-space: pre; margin 1em 0;" id='tml'></div>
 
 </body>
 </html>

@@ -2,11 +2,11 @@ function add_textmatrix(x,y,loc) {
 
   for(var cy=0;cy<y;cy++) {
 
-    cline = "<pre style=\"display: inline\" id=\"l" + cy + "\">"
+    cline = "<div style=\"display: inline\" id=\"l" + cy + "\">"
     for(var cx=0;cx<x;cx++) {
       cline += "A";
     }
-    cline += "</pre><br>";
+    cline += "</div><br>";
     document.getElementById('tml').innerHTML += cline;
   }
 }
