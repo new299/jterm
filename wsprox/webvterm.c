@@ -182,7 +182,7 @@ static int parser_resize(int new_rows, int new_cols, void *user)
 }
 
 static int screen_bell(void* d) {
-
+  return 0;
 }
 
 int state_erase(VTermRect r,void *user) {
@@ -234,16 +234,20 @@ int dcs_handler(const char *command,size_t cmdlen,void *user) {
   if(cmdlen < 3) return 0;
 
   ///regis_processor(command+2,cmdlen);
+  return 0;
 }
 
 int osc_handler(const char *command,size_t cmdlen,void *user) {
+  return 0;
 }
 
 int text_handler(const char *bytes, size_t len, void *user) {
   ///inline_data_receive(bytes,len);
+  return 0;
 }
 
 int esc_handler(const char *bytes, size_t len, void *user) {
+  return 0;
 }
 
 VTermParserCallbacks cb_parser = {
@@ -370,29 +374,25 @@ VTermScreenCell *grab_row(int trow,bool *dont_free,int *len) {
   return rowdata;
 }
 
-void webvterm_get_row(int crow,char *buffer,int len) {
+void webvterm_get_row(int crow,char *text_buffer,int *bg_buffer,int *fg_buffer,int len) {
 
   bool dont_free;
   VTermScreenCell *rowdata=grab_row(crow,&dont_free,&len);
   int xpos=0;
 
- // printf("vterm getrow cols %d\n",cols);
- // printf("vterm getrow len %d\n",len);
-
   for(int n=0;n<cols;n++) {
     if(n >= len) break;
-//    uint16_t rtext[1000];
 
-    buffer[n] = rowdata[n].chars[0];
-    //printf("vterm bchar: %c\n",buffer[n]);
-    if(buffer[n]==0) buffer[n]=' ';
-    buffer[n+1]=0;
+    text_buffer[n] = rowdata[n].chars[0];
+    if(text_buffer[n]==0) text_buffer[n]=' ';
+    text_buffer[n+1]=0;
 
-//    VTermColor fg = row[n].fg;
-//    VTermColor bg = row[n].bg;
+    VTermColor bg = rowdata[n].bg;
+    VTermColor fg = rowdata[n].fg;
 
+    bg_buffer[n] = (((int)bg.red) << 16) + (((int)bg.green) << 8) + ((int) bg.blue);
+    fg_buffer[n] = (((int)fg.red) << 16) + (((int)fg.green) << 8) + ((int) fg.blue);
   }
-  //printf("in vterm: %s\n",buffer);
 
   if(!dont_free)  free(rowdata);
 

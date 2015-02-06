@@ -119,10 +119,10 @@ function jss_connect(sockfd,addr,addrlen) {
       send_buffer[n] = m_server_address[n].charCodeAt();
     }
     send_buffer[m_server_address.length]=0;
-    console.debug("sending addr: " + m_server_address);
-    for(var n=0;n<send_buffer.length;n++) {
-      console.debug(n + " " + send_buffer[n]);
-    }
+   // console.debug("sending addr: " + m_server_address);
+   // for(var n=0;n<send_buffer.length;n++) {
+   //   console.debug(n + " " + send_buffer[n]);
+   // }
     serversocket.send(send_buffer);
     m_jss_ready = true;
   }

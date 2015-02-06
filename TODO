@@ -10,3 +10,6 @@ ReGiS support
 Sixel support?
 inline image xfer
 inline file xfer
+text underline/italics/bold
+clean up unfreed mallocs
+report on password fail etc

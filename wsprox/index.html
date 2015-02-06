@@ -9,6 +9,27 @@
 
 
 <script>
+  function char_carray_to_array(bufptr,len) {
+    var array = [];
+ 
+    for(i=0;i<len;i++) {
+      var value = String.fromCharCode(Module.getValue(bufptr+i,'i8'));
+      array.push(value);
+    }
+ 
+    return array;
+  }
+
+  function uint_carray_to_array(bufptr,len) {
+    var array = [];
+ 
+    for(i=0;i<len;i++) {
+      var value = Module.getValue(bufptr+(i*4),'i32');
+      array.push(value);
+    }
+ 
+    return array;
+  }
   
   function getChar(event) {
     var TABKEY = 9;
@@ -100,19 +121,29 @@
   }
 
   function redraw() {
-    var bufferptr = Module._malloc(1024);
+    var textbufferptr = Module._malloc(128);
+    var fgbufferptr   = Module._malloc(128*4);
+    var bgbufferptr   = Module._malloc(128*4);
     for(var cy=0;cy<23;cy++) {
-      Module.ccall('webvterm_get_row',null,['number','number','number'],[cy,bufferptr,1024]);
-      var buffer_str = Pointer_stringify(bufferptr);
+      Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,128]);
+      var buffer_str = Pointer_stringify(textbufferptr);
       
-      var current_line = textmatrix_getline(cy);
+      var textbuffer = char_carray_to_array(textbufferptr,80);
+//      console.debug("textbuffer: " + textbuffer);
+      var bgbuffer   = uint_carray_to_array(bgbufferptr,80);
+      var fgbuffer   = uint_carray_to_array(fgbufferptr,80);
+
+      var current_line = textmatrix_getline_txt(cy);
       if(buffer_str != current_line) {
 
         //console.debug("vterm buffer str " + buffer_str.length + ": " + buffer_str);
-//        for(var cx=0;cx<80;cx++) {
-//          textmatrix_setpos(cx,cy,buffer_str.substr(cx,1));
-//        }
-        textmatrix_setline(cy,buffer_str);
+//        console.debug("bg: " + bgbuffer[0]);
+//        console.debug("fg: " + fgbuffer[0]);
+        for(var cx=0;cx<80;cx++) {
+          textmatrix_setpos(cx,cy,textbuffer[cx],bgbuffer[cx],fgbuffer[cx]);
+        }
+        textmatrix_redraw_line(cy);
+//        textmatrix_setline(cy,buffer_str);
       }
     }
   }
