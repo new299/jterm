@@ -53,14 +53,31 @@ function textmatrix_setline(y,newline) {
 
 function textmatrix_getline(y) {
   var data ="";
-  data = data + "<p style=\"color: #" + textmatrix_displaydata[y][0].fg.toString(16) + "; background-color: #" + textmatrix_displaydata[y][0].bg.toString(16) + "; display: inline\">";
+
+  var fgcol = textmatrix_displaydata[y][0].fg.toString(16);
+  var bgcol = textmatrix_displaydata[y][0].bg.toString(16);
+  var fgcolpad = fgcol;
+  for(var n=fgcol.length;n<6;n++) fgcolpad = "0" + fgcolpad;
+
+  var bgcolpad = bgcol;
+  for(var n=bgcol.length;n<6;n++) bgcolpad = "0" + bgcolpad;
+  data = data + "<p style=\"color: #" + fgcolpad + "; background-color: #" + bgcolpad + "; display: inline\">";
   data = data + textmatrix_displaydata[y][0].char;
 
   for(var cx=1;cx<textmatrix_displaydata[y].length;cx++) {
     if((textmatrix_displaydata[y][cx-1].bg != textmatrix_displaydata[y][cx].bg) ||
        (textmatrix_displaydata[y][cx-1].fg != textmatrix_displaydata[y][cx].fg)) {
       data = data + "</p>";
-      data = data + "<p style=\"color: #" + textmatrix_displaydata[y][cx].fg.toString(16) + "; background-color: #" + textmatrix_displaydata[y][cx].bg.toString(16) + "; display: inline\">";
+      var fgcol = textmatrix_displaydata[y][cx].fg.toString(16);
+      var bgcol = textmatrix_displaydata[y][cx].bg.toString(16);
+ 
+      var fgcolpad = fgcol;
+      for(var n=fgcol.length;n<6;n++) fgcolpad = "0" + fgcolpad;
+
+      var bgcolpad = bgcol;
+      for(var n=bgcol.length;n<6;n++) bgcolpad = "0" + bgcolpad;
+
+      data = data + "<p style=\"color: #" + fgcolpad + "; background-color: #" + bgcolpad + "; display: inline\">";
       data = data + textmatrix_displaydata[y][cx].char;
     } else {
       data = data + textmatrix_displaydata[y][cx].char;
