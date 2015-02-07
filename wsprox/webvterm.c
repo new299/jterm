@@ -334,6 +334,17 @@ void webvterm_init(int cols_in,int rows_in) {
 
   vterm_screen_reset(vts, 1);
   vterm_parser_set_utf8(vt,1); // should be vts?
+  VTermColor fg;
+  VTermColor bg;
+
+  fg.red   = 0;
+  fg.green = 0;
+  fg.blue  = 0;
+  bg.red   = 255;
+  bg.green = 255;
+  bg.blue  = 255;
+
+  vterm_state_set_default_colors(vs,&fg,&bg);
 }
 
 void webvterm_recv(char *buffer,int len) {

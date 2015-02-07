@@ -9,6 +9,12 @@
 
 
 <script>
+
+  // Globals are emscripten doesn't do memory management?
+  var textbufferptr = Module._malloc(128);
+  var fgbufferptr   = Module._malloc(128*4);
+  var bgbufferptr   = Module._malloc(128*4);
+
   function char_carray_to_array(bufptr,len) {
     var array = [];
  
@@ -74,6 +80,12 @@
   }
 
   function do_connect() {
+    // add display
+    add_textmatrix(80,23);
+    textmatrix_setpos(40,20,' ');
+    textmatrix_setpos(20,20,'C');
+    Module.ccall('webvterm_init',null,['number','number'],[80,23]);
+
     document.getElementById('logindisplay').style.display = 'none';
     var serverad = document.getElementById('serverad').value;
     var port     = document.getElementById('port'    ).value;
@@ -89,18 +101,6 @@
     Module.writeAsciiToMemory(password, passwordptr);
     result = Module.ccall('webssh2_setuserpass','number',['number','number'],[usernameptr,passwordptr]);
     queue_connect(on_recv);
-
-    Module.ccall('webvterm_init',null,['number','number'],[80,23]);
-
-    add_textmatrix(80,23);
-    textmatrix_setpos(40,20,' ');
-    textmatrix_setpos(20,20,'C');
-//    document.getElementById('sendtext').onkeypress = function(event) {
-//      var char = getChar(event || window.event)
-//      if (!char) return // special key
-//      ssh_send(char);
-//      return false
-//    }
 
     document.onkeypress = function(event) {
       var char = getChar(event || window.event)
@@ -121,31 +121,26 @@
   }
 
   function redraw() {
-    var textbufferptr = Module._malloc(128);
-    var fgbufferptr   = Module._malloc(128*4);
-    var bgbufferptr   = Module._malloc(128*4);
     for(var cy=0;cy<23;cy++) {
       Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,128]);
       var buffer_str = Pointer_stringify(textbufferptr);
       
       var textbuffer = char_carray_to_array(textbufferptr,80);
-//      console.debug("textbuffer: " + textbuffer);
       var bgbuffer   = uint_carray_to_array(bgbufferptr,80);
       var fgbuffer   = uint_carray_to_array(fgbufferptr,80);
 
       var current_line = textmatrix_getline_txt(cy);
       if(buffer_str != current_line) {
 
-        //console.debug("vterm buffer str " + buffer_str.length + ": " + buffer_str);
-//        console.debug("bg: " + bgbuffer[0]);
-//        console.debug("fg: " + fgbuffer[0]);
         for(var cx=0;cx<80;cx++) {
           textmatrix_setpos(cx,cy,textbuffer[cx],bgbuffer[cx],fgbuffer[cx]);
         }
         textmatrix_redraw_line(cy);
-//        textmatrix_setline(cy,buffer_str);
       }
     }
+//    Module._free(textbufferptr);
+//    Module._free(fgbufferptr);
+//    Module._free(bgbufferpty);
   }
   
     
