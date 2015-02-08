@@ -320,6 +320,18 @@ void webvterm_init(int cols_in,int rows_in) {
   cols = cols_in;
   rows = rows_in;
 
+  VTermColor fg;
+  VTermColor bg;
+
+  fg.red   = 255;
+  fg.green = 255;
+  fg.blue  = 255;
+  bg.red   = 0;
+  bg.green = 0;
+  bg.blue  = 0;
+
+  vterm_state_set_default_colors(vs,&fg,&bg);
+
   vt = vterm_new(rows, cols);
 
   vts = vterm_obtain_screen(vt);
@@ -337,17 +349,6 @@ void webvterm_init(int cols_in,int rows_in) {
 
   vterm_screen_reset(vts, 1);
   vterm_parser_set_utf8(vt,1); // should be vts?
-  VTermColor fg;
-  VTermColor bg;
-
-  fg.red   = 0;
-  fg.green = 0;
-  fg.blue  = 0;
-  bg.red   = 255;
-  bg.green = 255;
-  bg.blue  = 255;
-
-  vterm_state_set_default_colors(vs,&fg,&bg);
 }
 
 void webvterm_recv(char *buffer,int len) {

@@ -2,11 +2,47 @@ var textmatrix_displaydata = []; // array arranged by y x
 
 var textmatrix_cursor_x = 0;
 var textmatrix_cursor_y = 0;
+var textmatrix_textwidth = 10;
+var textmatrix_textheight = 10;
 
-function add_textmatrix(x,y) {
+var textmatrix_rows = 25;
+var textmatrix_cols = 80;
+
+function textmatrix_setsize_px(x,y) {
+  textmatrix_set_textsize();
+  
+  textmatrix_cols = Math.floor(x/textmatrix_textwidth);
+  textmatrix_rows = Math.floor(y/textmatrix_textheight);
+  console.debug("x in: " + x);
+  console.debug("y in: " + y);
+  console.debug("rows: " + textmatrix_rows);
+  console.debug("cols: " + textmatrix_cols);
+}
+
+function textmatrix_set_textsize() {
+  var d = document.createElement("span");
+  d.style.position = "absolute";
+  d.style.top      = "-100px";
+  d.style.display  = "inline-block";
+  d.innerHTML = "A";
+
+  textmatrix_textwidth  = d.offsetWidth;
+  textmatrix_textheight = d.offsetHeight;
+
+  if(textmatrix_textwidth  == 0) { textmatrix_textwidth = 8;   }
+  if(textmatrix_textheight == 0) { textmatrix_textheight = 16; }
+}
+
+function textmatrix_add_px(x,y) {
+  textmatrix_setsize_px(x,y);
+  textmatrix_add_tx(textmatrix_cols,textmatrix_rows);
+}
+
+function textmatrix_add_tx(x,y) {
 
   for(var cy=0;cy<y;cy++) {
 
+    // create this via DOM
     cline = "<div style=\"margin-top: 0px; margin-bottom: 0px; padding:0; display: inline-block\" id=\"l" + cy + "\">"
 
     textmatrix_displaydata.push([]);
@@ -15,8 +51,16 @@ function add_textmatrix(x,y) {
     }
     cline += "</div><br>";
     document.getElementById('tml').innerHTML += cline;
-  textmatrix_redraw_line(cy);
+    textmatrix_redraw_line(cy);
   }
+}
+
+function textmatrix_get_cols() {
+  return textmatrix_cols;
+}
+
+function textmatrix_get_rows() {
+  return textmatrix_rows;
 }
 
 function textmatrix_setpos(x,y,c,bg,fg) {

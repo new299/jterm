@@ -11,9 +11,10 @@
 <script>
 
   // Globals are emscripten doesn't do memory management?
-  var textbufferptr = Module._malloc(128);
-  var fgbufferptr   = Module._malloc(128*4);
-  var bgbufferptr   = Module._malloc(128*4);
+  var textbufferptr = Module._malloc(256);
+  var fgbufferptr   = Module._malloc(256*4);
+  var bgbufferptr   = Module._malloc(256*4);
+  var buffer        = Module._malloc(1024);
 
   function char_carray_to_array(bufptr,len) {
     var array = [];
@@ -46,8 +47,8 @@
       return "\t";
    }
 
-   console.debug("kcode: " + event.keyCode);
-   console.debug("ctrl: " + event.ctrlKey);
+//   console.debug("kcode: " + event.keyCode);
+//   console.debug("ctrl: " + event.ctrlKey);
 
     var kcode = event.keyCode;
 
@@ -82,10 +83,11 @@
 
   function do_connect() {
     // add display
-    add_textmatrix(80,23);
-    textmatrix_setpos(40,20,' ');
-    textmatrix_setpos(20,20,'C');
-    Module.ccall('webvterm_init',null,['number','number'],[80,23]);
+    textmatrix_add_px(window.innerWidth,window.innerHeight);
+    var rows = textmatrix_get_rows();
+    var cols = textmatrix_get_cols();
+
+    Module.ccall('webvterm_init',null,['number','number'],[cols,rows]);
 
     document.getElementById('logindisplay').style.display = 'none';
     var serverad = document.getElementById('serverad').value;
@@ -129,18 +131,21 @@
 
     textmatrix_draw_cursor(cursor_x,cursor_y);
 
-    for(var cy=0;cy<23;cy++) {
+    var rows = textmatrix_get_rows();
+    var cols = textmatrix_get_cols();
+
+    for(var cy=0;cy<rows;cy++) {
       Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,128]);
       var buffer_str = Pointer_stringify(textbufferptr);
       
-      var textbuffer = char_carray_to_array(textbufferptr,80);
-      var bgbuffer   = uint_carray_to_array(bgbufferptr,80);
-      var fgbuffer   = uint_carray_to_array(fgbufferptr,80);
+      var textbuffer = char_carray_to_array(textbufferptr,cols);
+      var bgbuffer   = uint_carray_to_array(bgbufferptr,cols);
+      var fgbuffer   = uint_carray_to_array(fgbufferptr,cols);
 
       var current_line = textmatrix_getline_txt(cy);
       if(buffer_str != current_line) {
 
-        for(var cx=0;cx<80;cx++) {
+        for(var cx=0;cx<cols;cx++) {
           textmatrix_setpos(cx,cy,textbuffer[cx],bgbuffer[cx],fgbuffer[cx]);
         }
         textmatrix_redraw_line(cy);
@@ -149,9 +154,6 @@
 
   }
   
-    
-
-  var buffer = Module._malloc(1024);
   function on_recv() {
     var len=1;
     for(;len > 0;) {
@@ -200,7 +202,7 @@
         </div>
     </div>
 </div>
-  <div style="display: inline; font-family: monospace; white-space: pre; margin 1em 0;" id='tml'></div>
+<div style="display: inline; font-family: monospace; white-space: pre; margin 1em 0;" id='tml'></div>
 
 </body>
 </html>
