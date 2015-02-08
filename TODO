@@ -9,7 +9,6 @@ text underline/italics/bold/reverse?
 clean up unfreed mallocs
 close button
 disconnect message
-redraw stalls sometimes (e.g. try "help")
 
 ReGiS support
 Sixel support?

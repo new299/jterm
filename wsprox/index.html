@@ -153,10 +153,13 @@
 
   var buffer = Module._malloc(1024);
   function on_recv() {
-    var len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
-    if(len > 0) {
-      Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
-      redraw();
+    var len=1;
+    for(;len > 0;) {
+      len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
+      if(len > 0) {
+        Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
+        redraw();
+      }
     }
   }
 
