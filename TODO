@@ -1,15 +1,17 @@
-disconnect message
 Resize
+update on col change only
+last line update issue: only appears after running mutt or nano
 golang shouldn't crash on parse fail
 ad div
-close button
 example buttons
+report on password fail etc
+text underline/italics/bold/reverse?
+clean up unfreed mallocs
+close button
+disconnect message
+redraw stalls sometimes (e.g. try "help")
+
 ReGiS support
 Sixel support?
 inline image xfer
 inline file xfer
-text underline/italics/bold/reverse?
-clean up unfreed mallocs
-report on password fail etc
-update on col change only
-last line update issue: only appears after running mutt or nano
