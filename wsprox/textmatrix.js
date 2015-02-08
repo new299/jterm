@@ -94,6 +94,13 @@ function textmatrix_setline(y,newline) {
 
 }
 
+function char_to_html(c) {
+  if(c == "&") return "&amp;";
+  if(c == "<") return "&lt;";
+  if(c == ">") return "&gt;";
+  return c;
+}
+
 function textmatrix_getline(y) {
   var data ="";
 
@@ -126,9 +133,9 @@ function textmatrix_getline(y) {
       for(var n=bgcol.length;n<6;n++) bgcolpad = "0" + bgcolpad;
 
       data = data + "<p style=\"margin:0; padding:0; color: #" + fgcolpad + "; background-color: #" + bgcolpad + "; display: inline-block\">";
-      data = data + textmatrix_displaydata[y][cx].char;
+      data = data + char_to_html(textmatrix_displaydata[y][cx].char);
     } else {
-      data = data + textmatrix_displaydata[y][cx].char;
+      data = data + char_to_html(textmatrix_displaydata[y][cx].char);
     }
 
     if((cx == textmatrix_cursor_x) && (y == textmatrix_cursor_y)) {
