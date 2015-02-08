@@ -13,3 +13,6 @@ inline file xfer
 text underline/italics/bold
 clean up unfreed mallocs
 report on password fail etc
+update on col change only
+last line update issue: only appears after running mutt or nano
+sending esc key? how?

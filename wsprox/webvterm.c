@@ -22,6 +22,9 @@ size_t    scroll_buffer_end   =0;
 VTermScreenCell **scroll_buffer = 0;
 uint32_t         *scroll_buffer_lens=0;
 
+int cursor_x; // updated below
+int cursor_y;
+
 VTermState *vs;
 
 void scroll_buffer_get(size_t line_number,VTermScreenCell **line,int *len);
@@ -407,4 +410,21 @@ void webvterm_get_row(int crow,char *text_buffer,int *bg_buffer,int *fg_buffer,i
 
   if(!dont_free)  free(rowdata);
 
+}
+
+
+void webvterm_cursor_position_update(int *cursorx,int *cursory) {
+  VTermPos cursorpos;
+  vterm_state_get_cursorpos(vs,&cursorpos);
+
+  cursor_x = cursorpos.col;
+  cursor_y = cursorpos.row;
+}
+
+int webvterm_cursor_position_x(int *cursorx,int *cursory) {
+  return cursor_x;
+}
+
+int webvterm_cursor_position_y(int *cursorx,int *cursory) {
+  return cursor_y;
 }

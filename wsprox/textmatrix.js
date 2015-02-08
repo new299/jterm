@@ -1,5 +1,8 @@
 var textmatrix_displaydata = []; // array arranged by y x
 
+var textmatrix_cursor_x = 0;
+var textmatrix_cursor_y = 0;
+
 function add_textmatrix(x,y) {
 
   for(var cy=0;cy<y;cy++) {
@@ -8,7 +11,6 @@ function add_textmatrix(x,y) {
 
     textmatrix_displaydata.push([]);
     for(var cx=0;cx<x;cx++) {
-//      cline += "A";
       textmatrix_displaydata[cy].push({"char":"A", "fg":65535, "bg":0});
     }
     cline += "</div><br>";
@@ -16,10 +18,6 @@ function add_textmatrix(x,y) {
   textmatrix_redraw_line(cy);
   }
 }
-
-//function stridx(str,index, character) {
-//    return str.substr(0, index) + character + str.substr(index+character.length);
-//}
 
 function textmatrix_setpos(x,y,c,bg,fg) {
 
@@ -33,13 +31,8 @@ function textmatrix_redraw_line(y) {
 
   var newline;
 
-//  for(var cx=0;cx<textmatrix_displaydata[y].length;cx++) {
-//    newline += textmatrix_displaydata[y][cx].char;
-//  }
   newline = textmatrix_getline(y);
   
-  //var newline = stridx(line,x,c);
-
   document.getElementById('l' + y).innerHTML = newline;
 }
 
@@ -65,6 +58,11 @@ function textmatrix_getline(y) {
   data = data + textmatrix_displaydata[y][0].char;
 
   for(var cx=1;cx<textmatrix_displaydata[y].length;cx++) {
+
+    if((cx == textmatrix_cursor_x) && (y == textmatrix_cursor_y)) {
+      data = data + "<u>";
+    }
+
     if((textmatrix_displaydata[y][cx-1].bg != textmatrix_displaydata[y][cx].bg) ||
        (textmatrix_displaydata[y][cx-1].fg != textmatrix_displaydata[y][cx].fg)) {
       data = data + "</p>";
@@ -82,7 +80,14 @@ function textmatrix_getline(y) {
     } else {
       data = data + textmatrix_displaydata[y][cx].char;
     }
+
+    if((cx == textmatrix_cursor_x) && (y == textmatrix_cursor_y)) {
+      data = data + "</u>";
+    }
+
   }
+
+
   data = data + "</p>";
 
   return data;
@@ -94,4 +99,15 @@ function textmatrix_getline_txt(y) {
       data = data + textmatrix_displaydata[y][cx].char;
   }
   return data;
+}
+
+function textmatrix_draw_cursor(x,y) {
+  if((x != textmatrix_cursor_x) || (y != textmatrix_cursor_y)) {
+    redraw_y = textmatrix_cursor_y;
+  }
+
+  textmatrix_cursor_x = x;
+  textmatrix_cursor_y = y;
+
+  textmatrix_redraw_line(redraw_y);
 }

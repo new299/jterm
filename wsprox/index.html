@@ -121,6 +121,13 @@
   }
 
   function redraw() {
+
+    Module.ccall('webvterm_cursor_position_update',null,[],[]);
+    var cursor_x = Module.ccall('webvterm_cursor_position_x','number',[],[]);
+    var cursor_y = Module.ccall('webvterm_cursor_position_y','number',[],[]);
+
+    textmatrix_draw_cursor(cursor_x,cursor_y);
+
     for(var cy=0;cy<23;cy++) {
       Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,128]);
       var buffer_str = Pointer_stringify(textbufferptr);
@@ -138,9 +145,7 @@
         textmatrix_redraw_line(cy);
       }
     }
-//    Module._free(textbufferptr);
-//    Module._free(fgbufferptr);
-//    Module._free(bgbufferpty);
+
   }
   
     
@@ -149,14 +154,8 @@
   function on_recv() {
     var len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
     if(len > 0) {
-
       Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
       redraw();
-
-      // Convert the resulting string to a JS string
-//      setValue(buffer+len,0,'i8');
-//      var buffer_str = Pointer_stringify(buffer);
-//      document.getElementById('comms').innerHTML += "Received " + len + " : " + buffer_str + "<br>";
     }
   }
 
