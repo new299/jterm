@@ -24,10 +24,16 @@ function textmatrix_set_textsize() {
   d.style.position = "absolute";
   d.style.top      = "-100px";
   d.style.display  = "inline-block";
-  d.innerHTML = "A";
+  d.style.margin   = 0;
+  d.style.padding  = 0;
+  d.innerHTML = "AAAAAAAA";
 
-  textmatrix_textwidth  = d.offsetWidth;
+  var currentDiv = document.getElementById("body"); 
+  document.body.insertBefore(d, currentDiv);
+
+  textmatrix_textwidth  = (d.offsetWidth/8)-1;
   textmatrix_textheight = d.offsetHeight;
+  console.debug("width: " + d.offsetWidth);
 
   if(textmatrix_textwidth  == 0) { textmatrix_textwidth = 8;   }
   if(textmatrix_textheight == 0) { textmatrix_textheight = 16; }
