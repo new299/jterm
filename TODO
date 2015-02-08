@@ -9,8 +9,12 @@ text underline/italics/bold/reverse?
 clean up unfreed mallocs
 close button
 disconnect message
+hitting enter in nano on save not working?
+occasional cursor position loss in vi?
+old cursor position not always cleared.
 
 ReGiS support
 Sixel support?
 inline image xfer
 inline file xfer
+
