@@ -46,12 +46,13 @@
       return "\t";
    }
 
-   //console.debug("kcode: " + event.keyCode);
-   //console.debug("ctrl: " + event.ctrlKey);
+   console.debug("kcode: " + event.keyCode);
+   console.debug("ctrl: " + event.ctrlKey);
 
     var kcode = event.keyCode;
 
     if(event.keyCode == 13) return "\n";
+    if(event.keyCode == 27) return String.fromCharCode(27);
     if(event.keyCode == 8 ) return String.fromCharCode(127);
 
     if(event.keyCode == 37) return String.fromCharCode(0x1b) + 'O' + 'D';

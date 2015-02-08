@@ -1,5 +1,3 @@
-cursor display
-color display?
 disconnect message
 Resize
 golang shouldn't crash on parse fail
@@ -10,9 +8,8 @@ ReGiS support
 Sixel support?
 inline image xfer
 inline file xfer
-text underline/italics/bold
+text underline/italics/bold/reverse?
 clean up unfreed mallocs
 report on password fail etc
 update on col change only
 last line update issue: only appears after running mutt or nano
-sending esc key? how?
