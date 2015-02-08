@@ -250,46 +250,8 @@ int webssh2_write(char *buffer,int size) {
   return res;
 }
 
-    /* At this point the shell can be interacted with using
-     * libssh2_channel_read()
-     * libssh2_channel_read_stderr()
-     * libssh2_channel_write()
-     * libssh2_channel_write_stderr()
-     *
-     * Blocking mode may be (en|dis)abled with: libssh2_channel_set_blocking()
-     * If the server send EOF, libssh2_channel_eof() will return non-0
-     * To send EOF to the server use: libssh2_channel_send_eof()
-     * A channel can be closed with: libssh2_channel_close()
-     * A channel can be freed with: libssh2_channel_free()
-     */
-/*
-  skip_shell:
-    if (channel) {
-        libssh2_channel_free(channel);
-        channel = NULL;
-    }
-*/
-    /* Other channel types are supported via:
-     * libssh2_scp_send()
-     * libssh2_scp_recv()
-     * libssh2_channel_direct_tcpip()
-     */
-/*
-  shutdown:
-
-    libssh2_session_disconnect(session,
-                               "Normal Shutdown, Thank you for playing");
-    libssh2_session_free(session);
-
-#ifdef WIN32
-    closesocket(sock);
-#else
-    close(sock);
-#endif
-    fprintf(stderr, "all done!\n");
-
-    libssh2_exit();
-
-    return 0;
+int webssh2_resize(int cols,int rows) {
+  if(channel == 0) return 1;
+  if(libssh2_channel_eof(channel)!=0) {return -1;}
+  libssh2_channel_request_pty_size(channel,cols,rows);
 }
-*/

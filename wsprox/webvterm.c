@@ -264,7 +264,7 @@ VTermParserCallbacks cb_parser = {
 };
 
 
-void terminal_resize() {
+void webvterm_resize() {
 
  // if(c_resize != NULL) (*c_resize)(cols,rows);
 
