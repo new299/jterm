@@ -4,7 +4,7 @@ function add_textmatrix(x,y) {
 
   for(var cy=0;cy<y;cy++) {
 
-    cline = "<div style=\"display: inline\" id=\"l" + cy + "\">"
+    cline = "<div style=\"margin-top: 0px; margin-bottom: 0px; padding:0; display: inline-block\" id=\"l" + cy + "\">"
 
     textmatrix_displaydata.push([]);
     for(var cx=0;cx<x;cx++) {
@@ -61,7 +61,7 @@ function textmatrix_getline(y) {
 
   var bgcolpad = bgcol;
   for(var n=bgcol.length;n<6;n++) bgcolpad = "0" + bgcolpad;
-  data = data + "<p style=\"color: #" + fgcolpad + "; background-color: #" + bgcolpad + "; display: inline\">";
+  data = data + "<p style=\"margin:0; padding:0; color: #" + fgcolpad + "; background-color: #" + bgcolpad + "; display: inline-block\">";
   data = data + textmatrix_displaydata[y][0].char;
 
   for(var cx=1;cx<textmatrix_displaydata[y].length;cx++) {
