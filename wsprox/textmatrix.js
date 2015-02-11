@@ -13,25 +13,31 @@ function textmatrix_setsize_px(x,y) {
   
   textmatrix_cols = Math.floor(x/textmatrix_textwidth);
   textmatrix_rows = Math.floor(y/textmatrix_textheight);
-  console.debug("x in: " + x);
-  console.debug("y in: " + y);
+  console.debug("textwidth is : " + textmatrix_textwidth);
+  console.debug("textheihgt is: " + textmatrix_textheight);
+  console.debug("x is: " + x);
+  console.debug("y is: " + y);
   console.debug("rows: " + textmatrix_rows);
   console.debug("cols: " + textmatrix_cols);
 }
 
 function textmatrix_set_textsize() {
   var d = document.createElement("span");
-  d.style.position = "absolute";
-  d.style.top      = "-100px";
-  d.style.display  = "inline-block";
-  d.style.margin   = 0;
-  d.style.padding  = 0;
-  d.innerHTML = "AAAAAAAA";
+  d.style.position      = "absolute";
+  d.style.top           = "-100px";
+  d.style.display       = "inline-block";
+  d.style.fontFamily    = "monospace";
+  d.style.whiteSpace    = "pre";
+  d.style.margin        = 0;
+  d.style.padding       = 0;
+  d.style.marginTop     = 0;
+  d.style.marginBottom  = 0;
+  d.innerHTML = "AbcdefgA";
 
   var currentDiv = document.getElementById("body"); 
   document.body.insertBefore(d, currentDiv);
 
-  textmatrix_textwidth  = (d.offsetWidth/8)-1;
+  textmatrix_textwidth  = (d.offsetWidth/8);
   textmatrix_textheight = d.offsetHeight;
   console.debug("width: " + d.offsetWidth);
 

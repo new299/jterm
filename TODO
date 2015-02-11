@@ -1,4 +1,4 @@
-width setting appears to screw up sometimes, font size calculated incorrectly at some zoon levels?
+sometimes reporting as 80cols? possibly fix with resize function below
 
 ad div
 report on password fail etc
@@ -6,7 +6,6 @@ example buttons
 close button
 disconnect message
 Resize on window resize.
-
 
 text underline/italics/bold (reverse implemented)
 ReGiS support
