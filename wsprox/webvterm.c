@@ -224,12 +224,9 @@ VTermStateCallbacks cb_state = {
 
 static int screen_damage(VTermRect rect, void *user_data) {
 
-  printf("screen damage detected\n");
-
   int ret = EM_ASM_INT({
     return webvterm_damage_cb($0,$1,$2,$3);
   }, rect.start_row,rect.end_row,rect.start_col,rect.end_col);
-
 
   return 1;
 }
@@ -414,7 +411,7 @@ VTermScreenCell *grab_row(int trow,bool *dont_free,int *len) {
   return rowdata;
 }
 
-void webvterm_get_row(int crow,char *text_buffer,int *bg_buffer,int *fg_buffer,int len) {
+void webvterm_get_row(int crow,char *text_buffer,int *bg_buffer,int *fg_buffer,int *rev_buffer,int len) {
 
   bool dont_free;
   VTermScreenCell *rowdata=grab_row(crow,&dont_free,&len);
@@ -430,8 +427,9 @@ void webvterm_get_row(int crow,char *text_buffer,int *bg_buffer,int *fg_buffer,i
     VTermColor bg = rowdata[n].bg;
     VTermColor fg = rowdata[n].fg;
 
-    bg_buffer[n] = (((int)bg.red) << 16) + (((int)bg.green) << 8) + ((int) bg.blue);
-    fg_buffer[n] = (((int)fg.red) << 16) + (((int)fg.green) << 8) + ((int) fg.blue);
+    bg_buffer[n]  = (((int)bg.red) << 16) + (((int)bg.green) << 8) + ((int) bg.blue);
+    fg_buffer[n]  = (((int)fg.red) << 16) + (((int)fg.green) << 8) + ((int) fg.blue);
+    rev_buffer[n] = rowdata[n].attrs.reverse;
   }
 
   if(!dont_free)  free(rowdata);

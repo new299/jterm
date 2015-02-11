@@ -1,17 +1,14 @@
-update on col change only, hash each line? can vterm report?
 occasional cursor position loss in vi?
-tput sometimes returning cols of 80, unclear why
-last line update issue: only appears after running mutt or nano
-golang shouldn't crash on parse fail
+clean up unfreed mallocs - something allocing and not freeing memory, running out of mem, possible related to screen damage
 hitting enter in nano on save not working?
+golang shouldn't crash on parse fail
 ad div
 report on password fail etc
-text underline/italics/bold/reverse?
-clean up unfreed mallocs
 example buttons
 close button
 disconnect message
 Resize on window resize.
+text underline/italics/bold (reverse implemented)
 
 ReGiS support
 Sixel support?

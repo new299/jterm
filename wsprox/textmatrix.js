@@ -53,7 +53,7 @@ function textmatrix_add_tx(x,y) {
 
     textmatrix_displaydata.push([]);
     for(var cx=0;cx<x;cx++) {
-      textmatrix_displaydata[cy].push({"char":"A", "fg":65535, "bg":0});
+      textmatrix_displaydata[cy].push({"char":"A", "fg":65535, "bg":0, "rev":0});
     }
     cline += "</div><br>";
     document.getElementById('tml').innerHTML += cline;
@@ -69,11 +69,12 @@ function textmatrix_get_rows() {
   return textmatrix_rows;
 }
 
-function textmatrix_setpos(x,y,c,bg,fg) {
+function textmatrix_setpos(x,y,c,bg,fg,rev) {
 
-  textmatrix_displaydata[y][x].char = c;
-  textmatrix_displaydata[y][x].bg   = bg;
-  textmatrix_displaydata[y][x].fg   = fg;
+  textmatrix_displaydata[y][x].char    = c;
+  textmatrix_displaydata[y][x].bg      = bg;
+  textmatrix_displaydata[y][x].fg      = fg;
+  textmatrix_displaydata[y][x].reverse = rev;
 
 }
 
@@ -106,6 +107,11 @@ function textmatrix_getline(y) {
 
   var fgcol = textmatrix_displaydata[y][0].fg.toString(16);
   var bgcol = textmatrix_displaydata[y][0].bg.toString(16);
+  if(textmatrix_displaydata[y][0].reverse == 1) {
+    var t=fgcol; 
+    fgcol=bgcol;
+    bgcol=t;
+  }
   var fgcolpad = fgcol;
   for(var n=fgcol.length;n<6;n++) fgcolpad = "0" + fgcolpad;
 
@@ -121,10 +127,17 @@ function textmatrix_getline(y) {
     }
 
     if((textmatrix_displaydata[y][cx-1].bg != textmatrix_displaydata[y][cx].bg) ||
-       (textmatrix_displaydata[y][cx-1].fg != textmatrix_displaydata[y][cx].fg)) {
+       (textmatrix_displaydata[y][cx-1].fg != textmatrix_displaydata[y][cx].fg) ||
+       (textmatrix_displaydata[y][cx-1].reverse != textmatrix_displaydata[y][cx].reverse)) {
       data = data + "</p>";
       var fgcol = textmatrix_displaydata[y][cx].fg.toString(16);
       var bgcol = textmatrix_displaydata[y][cx].bg.toString(16);
+
+      if(textmatrix_displaydata[y][cx].reverse == 1) {
+        var t=fgcol; 
+        fgcol=bgcol;
+        bgcol=t;
+      }
  
       var fgcolpad = fgcol;
       for(var n=fgcol.length;n<6;n++) fgcolpad = "0" + fgcolpad;

@@ -14,6 +14,7 @@
   var textbufferptr = Module._malloc(256);
   var fgbufferptr   = Module._malloc(256*4);
   var bgbufferptr   = Module._malloc(256*4);
+  var revbufferptr  = Module._malloc(256*4);
   var buffer        = Module._malloc(1024);
 
   function char_carray_to_array(bufptr,len) {
@@ -28,8 +29,6 @@
   }
 
   function webvterm_damage_cb(start_row,end_row,start_col,end_col) {
-    console.debug("damaged cb called in index.html: " + start_row + " " + end_row);
-
     Module.ccall('webvterm_cursor_position_update',null,[],[]);
     var cursor_x = Module.ccall('webvterm_cursor_position_x','number',[],[]);
     var cursor_y = Module.ccall('webvterm_cursor_position_y','number',[],[]);
@@ -39,18 +38,19 @@
     var cols = textmatrix_get_cols();
 
     for(var cy=start_row;cy<end_row;cy++) {
-      Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,128]);
+      Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,revbufferptr,256]);
       var buffer_str = Pointer_stringify(textbufferptr);
       
       var textbuffer = char_carray_to_array(textbufferptr,cols);
       var bgbuffer   = uint_carray_to_array(bgbufferptr,cols);
       var fgbuffer   = uint_carray_to_array(fgbufferptr,cols);
+      var revbuffer  = uint_carray_to_array(revbufferptr,cols);
 
       var current_line = textmatrix_getline_txt(cy);
       if(buffer_str != current_line) {
 
         for(var cx=0;cx<cols;cx++) {
-          textmatrix_setpos(cx,cy,textbuffer[cx],bgbuffer[cx],fgbuffer[cx]);
+          textmatrix_setpos(cx,cy,textbuffer[cx],bgbuffer[cx],fgbuffer[cx],revbuffer[cx]);
         }
         textmatrix_redraw_line(cy);
       }
@@ -78,8 +78,6 @@
       return "\t";
    }
 
-//   console.debug("kcode: " + event.keyCode);
-//   console.debug("ctrl: " + event.ctrlKey);
 
     var kcode = event.keyCode;
 
@@ -127,7 +125,6 @@
     var password = document.getElementById('password').value;
 
     jss_set_server_address(serverad + ":" + port);
-    console.debug("addr: " + serverad + ":" + port);
     var usernameptr = Module._malloc(username.length+1);
     Module.writeAsciiToMemory(username, usernameptr);
 
@@ -154,36 +151,6 @@
     document.getElementById('comms').innerHTML += "Sent: " + data + "<br>";
   }
 
-  function redraw() {
-
-    Module.ccall('webvterm_cursor_position_update',null,[],[]);
-    var cursor_x = Module.ccall('webvterm_cursor_position_x','number',[],[]);
-    var cursor_y = Module.ccall('webvterm_cursor_position_y','number',[],[]);
-    textmatrix_draw_cursor(cursor_x,cursor_y);
-
-    var rows = textmatrix_get_rows();
-    var cols = textmatrix_get_cols();
-
-    for(var cy=0;cy<rows;cy++) {
-      Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,128]);
-      var buffer_str = Pointer_stringify(textbufferptr);
-      
-      var textbuffer = char_carray_to_array(textbufferptr,cols);
-      var bgbuffer   = uint_carray_to_array(bgbufferptr,cols);
-      var fgbuffer   = uint_carray_to_array(fgbufferptr,cols);
-
-      var current_line = textmatrix_getline_txt(cy);
-      if(buffer_str != current_line) {
-
-        for(var cx=0;cx<cols;cx++) {
-          textmatrix_setpos(cx,cy,textbuffer[cx],bgbuffer[cx],fgbuffer[cx]);
-        }
-        textmatrix_redraw_line(cy);
-      }
-    }
-
-  }
-  
   var firstrecv=1;
   function on_recv() {
     var len=1;
@@ -198,10 +165,10 @@
       len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
       if(len > 0) {
         Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
-        Module.ccall('webvterm_flush_damage',null,[],[]);
         //redraw();
       }
     }
+    Module.ccall('webvterm_flush_damage',null,[],[]);
   }
 
 
