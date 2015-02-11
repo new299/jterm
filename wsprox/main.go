@@ -64,7 +64,6 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
   wsconn, err := upgrader.Upgrade(w, r, nil)
 
   if err != nil {
-    //log.Println(err)
     return
   }
 
@@ -82,10 +81,10 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
  
 
   //TODO: validate. Server can fall over here if input is incorrect
-  //address := "127.0.0.1:22"
   conn, err := net.Dial("tcp", address)
   if err != nil {
 	// handle error
+    return
   }
 
   go forwardtcp(wsconn,conn)
