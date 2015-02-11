@@ -384,13 +384,19 @@ void webvterm_recv(char *buffer,int len) {
   }
 }
 
+VTermScreenCell *rowdata_buffer = 0;
+
 VTermScreenCell *grab_row(int trow,bool *dont_free,int *len) {
 
   VTermScreenCell *rowdata = 0;
 
+  if(rowdata_buffer == 0) {
+    rowdata_buffer = malloc(1024*sizeof(VTermScreenCell)); // should be cols* but we may resize, 1024 is unsafe should fix this TODO
+  }
+
   if(trow >= 0) {
     // a screen row
-    rowdata = malloc(cols*sizeof(VTermScreenCell));
+    rowdata = rowdata_buffer;
     VTermPos vp;
     for(int n=0;n<cols;n++) {
       vp.row = trow;
@@ -398,7 +404,7 @@ VTermScreenCell *grab_row(int trow,bool *dont_free,int *len) {
       vterm_screen_get_cell(vts,vp,&(rowdata[n]));
     }
     *len = cols;
-    *dont_free =false;
+    *dont_free =true; // we keep the buffer (I should refactor out all scroll buffer code TODO)
   } else {
     // a scrollback row
     if((0-trow) > scroll_buffer_size) { rowdata = 0; }

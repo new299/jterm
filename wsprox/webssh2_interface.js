@@ -145,17 +145,11 @@
 
   function queue_read() {
     jss_recv_cb(m_on_recv);
-//    setTimeout(function() {
-//      m_on_recv();
-//      queue_read();
-//    }, 2000);
   }
 
-
-  var strptr = Module._malloc(1024);
+  var strptr = Module._malloc(2048); // malloc outside function, as emscripten can't free memory...
   function ssh_send(data) {
-    var mystring = data;// + "\r\n";
-//    var strptr = Module._malloc(mystring.length+1);
+    var mystring = data;
     Module.writeAsciiToMemory(mystring, strptr);
     setValue(strptr+mystring.length+1,0,'i8');
   

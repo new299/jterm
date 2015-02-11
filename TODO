@@ -1,7 +1,7 @@
 occasional cursor position loss in vi?
-clean up unfreed mallocs - something allocing and not freeing memory, running out of mem, possible related to screen damage
 hitting enter in nano on save not working?
 golang shouldn't crash on parse fail
+width setting appears to screw up sometimes, font size calculated incorrected at some zoon levels?
 ad div
 report on password fail etc
 example buttons
