@@ -1,15 +1,16 @@
 occasional cursor position loss in vi?
-hitting enter in nano on save not working?
 golang shouldn't crash on parse fail
-width setting appears to screw up sometimes, font size calculated incorrected at some zoon levels?
+width setting appears to screw up sometimes, font size calculated incorrectly at some zoon levels?
+
 ad div
 report on password fail etc
 example buttons
 close button
 disconnect message
 Resize on window resize.
-text underline/italics/bold (reverse implemented)
 
+
+text underline/italics/bold (reverse implemented)
 ReGiS support
 Sixel support?
 inline image xfer

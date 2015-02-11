@@ -81,7 +81,7 @@
 
     var kcode = event.keyCode;
 
-    if(event.keyCode == 13) return "\n";
+    if(event.keyCode == 13) return String.fromCharCode(13);
     if(event.keyCode == 27) return String.fromCharCode(27);
     if(event.keyCode == 8 ) return String.fromCharCode(127);
 
