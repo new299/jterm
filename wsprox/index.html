@@ -32,6 +32,7 @@
     Module.ccall('webvterm_cursor_position_update',null,[],[]);
     var cursor_x = Module.ccall('webvterm_cursor_position_x','number',[],[]);
     var cursor_y = Module.ccall('webvterm_cursor_position_y','number',[],[]);
+    console.debug("cursor at: " + cursor_x + " " + cursor_y);
     textmatrix_draw_cursor(cursor_x,cursor_y);
 
     var rows = textmatrix_get_rows();

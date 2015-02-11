@@ -117,8 +117,16 @@ function textmatrix_getline(y) {
 
   var bgcolpad = bgcol;
   for(var n=bgcol.length;n<6;n++) bgcolpad = "0" + bgcolpad;
+
+
   data = data + "<p style=\"margin:0; padding:0; color: #" + fgcolpad + "; background-color: #" + bgcolpad + "; display: inline-block\">";
+  if((0 == textmatrix_cursor_x) && (y == textmatrix_cursor_y)) {
+    data = data + "<u>";
+  }
   data = data + textmatrix_displaydata[y][0].char;
+  if((0 == textmatrix_cursor_x) && (y == textmatrix_cursor_y)) {
+    data = data + "</u>";
+  }
 
   for(var cx=1;cx<textmatrix_displaydata[y].length;cx++) {
 
@@ -182,4 +190,5 @@ function textmatrix_draw_cursor(x,y) {
   textmatrix_cursor_y = y;
 
   if(redraw_y != -1) { textmatrix_redraw_line(redraw_y); }
+  textmatrix_redraw_line(y);
 }
