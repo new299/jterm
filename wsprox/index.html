@@ -27,6 +27,37 @@
     return array;
   }
 
+  function webvterm_damage_cb(start_row,end_row,start_col,end_col) {
+    console.debug("damaged cb called in index.html: " + start_row + " " + end_row);
+
+    Module.ccall('webvterm_cursor_position_update',null,[],[]);
+    var cursor_x = Module.ccall('webvterm_cursor_position_x','number',[],[]);
+    var cursor_y = Module.ccall('webvterm_cursor_position_y','number',[],[]);
+    textmatrix_draw_cursor(cursor_x,cursor_y);
+
+    var rows = textmatrix_get_rows();
+    var cols = textmatrix_get_cols();
+
+    for(var cy=start_row;cy<end_row;cy++) {
+      Module.ccall('webvterm_get_row',null,['number','number','number','number','number'],[cy,textbufferptr,bgbufferptr,fgbufferptr,128]);
+      var buffer_str = Pointer_stringify(textbufferptr);
+      
+      var textbuffer = char_carray_to_array(textbufferptr,cols);
+      var bgbuffer   = uint_carray_to_array(bgbufferptr,cols);
+      var fgbuffer   = uint_carray_to_array(fgbufferptr,cols);
+
+      var current_line = textmatrix_getline_txt(cy);
+      if(buffer_str != current_line) {
+
+        for(var cx=0;cx<cols;cx++) {
+          textmatrix_setpos(cx,cy,textbuffer[cx],bgbuffer[cx],fgbuffer[cx]);
+        }
+        textmatrix_redraw_line(cy);
+      }
+    }
+  }
+    
+
   function uint_carray_to_array(bufptr,len) {
     var array = [];
  
@@ -128,7 +159,6 @@
     Module.ccall('webvterm_cursor_position_update',null,[],[]);
     var cursor_x = Module.ccall('webvterm_cursor_position_x','number',[],[]);
     var cursor_y = Module.ccall('webvterm_cursor_position_y','number',[],[]);
-
     textmatrix_draw_cursor(cursor_x,cursor_y);
 
     var rows = textmatrix_get_rows();
@@ -168,7 +198,8 @@
       len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
       if(len > 0) {
         Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
-        redraw();
+        Module.ccall('webvterm_flush_damage',null,[],[]);
+        //redraw();
       }
     }
   }

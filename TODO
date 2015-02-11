@@ -1,16 +1,16 @@
-if text parses as html/tag very bad things happen (fix)
-update on col change only
+update on col change only, hash each line? can vterm report?
+occasional cursor position loss in vi?
+tput sometimes returning cols of 80, unclear why
 last line update issue: only appears after running mutt or nano
 golang shouldn't crash on parse fail
+hitting enter in nano on save not working?
 ad div
-example buttons
 report on password fail etc
 text underline/italics/bold/reverse?
 clean up unfreed mallocs
+example buttons
 close button
 disconnect message
-hitting enter in nano on save not working?
-occasional cursor position loss in vi?
 Resize on window resize.
 
 ReGiS support

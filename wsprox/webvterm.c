@@ -6,6 +6,7 @@
 #include <locale.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <emscripten.h>
 
 static VTerm *vt;
 static VTermScreen *vts;
@@ -193,10 +194,17 @@ int state_erase(VTermRect r,void *user) {
   return 0;
 }
 
+static int screen_damage(VTermRect rect, void *user_data);
+
 VTermScreenCallbacks cb_screen = {
-  .prescroll = &screen_prescroll,
-  .resize    = &screen_resize,
-  .bell      = &screen_bell
+  .damage       = &screen_damage,
+  .moverect     = 0,
+  .movecursor   = 0,
+  .settermprop  = 0,
+  .setmousefunc = 0,
+  .prescroll    = &screen_prescroll,
+  .resize       = &screen_resize,
+  .bell         = &screen_bell
 };
 
 VTermStateCallbacks cb_state = {
@@ -214,6 +222,23 @@ VTermStateCallbacks cb_state = {
 };
 
 
+static int screen_damage(VTermRect rect, void *user_data) {
+
+  printf("screen damage detected\n");
+
+  int ret = EM_ASM_INT({
+    return webvterm_damage_cb($0,$1,$2,$3);
+  }, rect.start_row,rect.end_row,rect.start_col,rect.end_col);
+
+
+  return 1;
+}
+  
+
+int webvterm_flush_damage() {
+  vterm_screen_flush_damage(vts);
+  return 1;
+}
 
 int csi_handler(const char *leader, const long args[], int argcount, const char *intermed, char command, void *user) {
 /*  if(command == 'J') {
