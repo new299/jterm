@@ -153,7 +153,8 @@
     textmatrix_resize_px(window.innerWidth-hozmargin,window.innerHeight-lowermargin);
     var rows = textmatrix_get_rows();
     var cols = textmatrix_get_cols();
-    Module.ccall('webssh2_resize',null,['number','number'],[cols,rows]);
+    Module.ccall('webssh2_resize' ,null,['number','number'],[cols,rows]);
+    Module.ccall('webvterm_resize',null,['number','number'],[cols,rows]);
     webvterm_damage_cb(0,rows,0,cols);
   };
 

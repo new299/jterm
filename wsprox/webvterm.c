@@ -286,13 +286,6 @@ VTermParserCallbacks cb_parser = {
 };
 
 
-void webvterm_resize() {
-
- // if(c_resize != NULL) (*c_resize)(cols,rows);
-
-  if(vt != 0) vterm_set_size(vt,rows,cols);
-}
-
 void cursor_position(int *cursorx,int *cursory) {
   VTermPos cursorpos;
   vterm_state_get_cursorpos(vs,&cursorpos);
@@ -457,4 +450,10 @@ int webvterm_cursor_position_x(int *cursorx,int *cursory) {
 
 int webvterm_cursor_position_y(int *cursorx,int *cursory) {
   return cursor_y;
+}
+
+void webvterm_resize(int c,int r) {
+  cols = c;
+  rows = r;
+  if(vt != 0) vterm_set_size(vt,rows,cols);
 }
