@@ -145,6 +145,14 @@
     jss_close();
   };
 
+  window.onresize = function(event) {
+    textmatrix_resize_px(window.innerWidth,window.innerHeight);
+    var rows = textmatrix_get_rows();
+    var cols = textmatrix_get_cols();
+    Module.ccall('webssh2_resize',null,['number','number'],[cols,rows]);
+    webvterm_damage_cb(0,rows,0,cols);
+  };
+
   function senddata() {
     var data = document.getElementById('sendtext').value;
     ssh_send(data);
@@ -165,11 +173,12 @@
       len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
       if(len > 0) {
         Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
-        //redraw();
       }
     }
     Module.ccall('webvterm_flush_damage',null,[],[]);
   }
+
+
 
 
 </script>

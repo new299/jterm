@@ -54,17 +54,47 @@ function textmatrix_add_tx(x,y) {
 
   for(var cy=0;cy<y;cy++) {
 
-    // create this via DOM
-    cline = "<div style=\"margin-top: 0px; margin-bottom: 0px; padding:0; display: inline-block\" id=\"l" + cy + "\">"
+    //cline = "<div style=\"margin-top: 0px; margin-bottom: 0px; padding:0; display: inline-block\" id=\"l" + cy + "\">"
+    var d = document.createElement("div");
+    d.style.display       = "inline-block";
+    d.style.fontFamily    = "monospace";
+    d.style.whiteSpace    = "pre";
+    d.style.margin        = 0;
+    d.style.padding       = 0;
+    d.style.marginTop     = 0;
+    d.style.marginBottom  = 0;
+    d.id = "l" + cy;
+    d.innerHTML = "AbcdefgA";
+    var currentDiv = document.getElementById("tml");
+    currentDiv.insertBefore(d, null);
 
     textmatrix_displaydata.push([]);
     for(var cx=0;cx<x;cx++) {
       textmatrix_displaydata[cy].push({"char":"A", "fg":65535, "bg":0, "rev":0});
     }
-    cline += "</div><br>";
-    document.getElementById('tml').innerHTML += cline;
+    var b = document.createElement("br");
+    currentDiv.insertBefore(b, null);
+
+    
+    //cline += "</div><br>";
+    //document.getElementById('tml').innerHTML += cline;
     textmatrix_redraw_line(cy);
   }
+}
+
+function textmatrix_resize_px(x,y) {
+  textmatrix_setsize_px(x,y);
+  textmatrix_resize_tx(textmatrix_cols,textmatrix_rows);
+}
+
+function textmatrix_resize_tx(x,y) {
+  var m = document.getElementById('tml');
+  while (m.firstChild) {
+    m.removeChild(m.firstChild);
+  }
+  textmatrix_displaydata = [];
+
+  textmatrix_add_tx(x,y);
 }
 
 function textmatrix_get_cols() {
