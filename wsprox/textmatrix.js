@@ -52,6 +52,10 @@ function textmatrix_add_px(x,y) {
 
 function textmatrix_add_tx(x,y) {
 
+  var c = document.getElementById("tml");
+  c.style.width=x*textmatrix_textwidth;
+  c.style.height=y*textmatrix_textheight;
+
   for(var cy=0;cy<y;cy++) {
 
     //cline = "<div style=\"margin-top: 0px; margin-bottom: 0px; padding:0; display: inline-block\" id=\"l" + cy + "\">"

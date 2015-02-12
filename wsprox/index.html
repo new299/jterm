@@ -17,6 +17,9 @@
   var revbufferptr  = Module._malloc(256*4);
   var buffer        = Module._malloc(1024);
 
+  var hozmargin=2;
+  var lowermargin=60;
+
   function char_carray_to_array(bufptr,len) {
     var array = [];
  
@@ -112,7 +115,8 @@
 
   function do_connect() {
     // add display
-    textmatrix_add_px(window.innerWidth,window.innerHeight);
+    textmatrix_add_px(window.innerWidth-hozmargin,window.innerHeight-lowermargin);
+    document.body.style.background = "#000000";
     var rows = textmatrix_get_rows();
     var cols = textmatrix_get_cols();
 
@@ -146,7 +150,7 @@
   };
 
   window.onresize = function(event) {
-    textmatrix_resize_px(window.innerWidth,window.innerHeight);
+    textmatrix_resize_px(window.innerWidth-hozmargin,window.innerHeight-lowermargin);
     var rows = textmatrix_get_rows();
     var cols = textmatrix_get_cols();
     Module.ccall('webssh2_resize',null,['number','number'],[cols,rows]);
@@ -190,6 +194,7 @@
 <link href="login.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+<body style="background-color: #b0c4de;">
 <div class="container" id="logindisplay">
     <div class="row">
         <div class="col-md-offset-5 col-md-3">
@@ -217,7 +222,18 @@
         </div>
     </div>
 </div>
-<div style="display: inline; font-family: monospace; white-space: pre; margin 1em 0;" id='tml'></div>
+<div width=100%>
+<div style="font-family: monospace; white-space: pre; margin: 0 auto;" id='tml'></div>
+</div>
+
+<div id='ad' style="height:60px">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- jterm -->
+  <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-9449433064496325" data-ad-slot="3977486817"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
 
 </body>
 </html>
