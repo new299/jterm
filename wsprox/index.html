@@ -183,6 +183,11 @@
     Module.ccall('webvterm_flush_damage',null,[],[]);
   }
 
+  function connect_fail(err) {
+    alert("Unable to Connect:" + err);
+    location.reload();
+  }
+
 
 
 
