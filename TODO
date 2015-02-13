@@ -1,7 +1,10 @@
-report on password fail etc
+golang main gets jammed up after running for a long time (threads never terminate?)
 example buttons
 disconnect message
+close button
 display fingerprint
+performance
+ssl support
 
 text underline/italics/bold (reverse implemented)
 ReGiS support
