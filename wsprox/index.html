@@ -149,7 +149,10 @@
     jss_close();
   };
 
-  window.onresize = function(event) {
+  window.onresize = function(event) { doresize(); }
+
+
+  function doresize() {
     textmatrix_resize_px(window.innerWidth-hozmargin,window.innerHeight-lowermargin);
     var rows = textmatrix_get_rows();
     var cols = textmatrix_get_cols();
@@ -167,18 +170,19 @@
   var firstrecv=1;
   function on_recv() {
     var len=1;
-    if(firstrecv==1) {
-      var rows = textmatrix_get_rows();
-      var cols = textmatrix_get_cols();
-      Module.ccall('webssh2_resize',null,['number','number'],[cols,rows]);
-      firstrecv=0;
-    }
 
     for(;len > 0;) {
       len = Module.ccall('webssh2_read','number',['number','number'],[buffer,1024]);
       if(len > 0) {
         Module.ccall('webvterm_recv',null,['number','number'],[buffer,len]);
       }
+    }
+
+
+    if(firstrecv==1) {
+      doresize();
+      firstrecv=0;
+      setTimeout(function() {doresize(); },500); // for some reason the first resize often fails, and we're stuck at 80 cols
     }
     Module.ccall('webvterm_flush_damage',null,[],[]);
   }
