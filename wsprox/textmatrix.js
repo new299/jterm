@@ -182,7 +182,7 @@ function textmatrix_getline(y) {
   if((0 == textmatrix_cursor_x) && (y == textmatrix_cursor_y)) {
     data = data + "<u>";
   }
-  data = data + textmatrix_displaydata[y][0].char;
+  data = data + char_to_html(textmatrix_displaydata[y][0].char);
   if((0 == textmatrix_cursor_x) && (y == textmatrix_cursor_y)) {
     data = data + "</u>";
   }
