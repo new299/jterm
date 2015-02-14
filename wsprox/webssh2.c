@@ -17,12 +17,18 @@
 
 const char *keyfile1="~/.ssh/id_rsa.pub";
 const char *keyfile2="~/.ssh/id_rsa";
-const char username[1024];
-const char password[1024];
+char username[1024];
+char password[1024];
 
 int webssh2_setuserpass(char *username_in,char *password_in) {
   strcpy(username,username_in);
   strcpy(password,password_in);
+
+  size_t username_len = strlen(username_in);
+  size_t password_len = strlen(password_in);
+  int n=0;
+  for(n=0;n<username_len;n++) username_in[n]=0;
+  for(n=0;n<password_len;n++) password_in[n]=0;
   return 1;
 }
 
@@ -136,52 +142,14 @@ int webssh2_authenticate() {
             return 0;
         } else {
             fprintf(stderr, "\tAuthentication by password succeeded.\n");
+            size_t username_len = strlen(username);
+            size_t password_len = strlen(password);
+            int n=0;
+            for(n=0;n<username_len;n++) username[n]=0;
+            for(n=0;n<password_len;n++) password[n]=0;
+           
             return 1;
         }
-}
-
-int webssh2_unusedjunkauth() {
-
-    if (strstr(userauthlist, "password") != NULL) {
-        auth_pw |= 1;
-    }
-    if (strstr(userauthlist, "keyboard-interactive") != NULL) {
-        auth_pw |= 2;
-    }
-    if (strstr(userauthlist, "publickey") != NULL) {
-        auth_pw |= 4;
-    }
-
-    /* if we got an 4. argument we set this option if supported */
-    if (auth_pw & 1) {
-        /* We could authenticate via password */
-        if (libssh2_userauth_password(session, username, password)) {
-            fprintf(stderr, "\tAuthentication by password failed!\n");
-        } else {
-            fprintf(stderr, "\tAuthentication by password succeeded.\n");
-        }
-    } else if (auth_pw & 2) {
-        /* Or via keyboard-interactive */
-        if (libssh2_userauth_keyboard_interactive(session, username,
-                                                  &kbd_callback) ) {
-            fprintf(stderr,
-                "\tAuthentication by keyboard-interactive failed!\n");
-        } else {
-            fprintf(stderr,
-                "\tAuthentication by keyboard-interactive succeeded.\n");
-        }
-    } else if (auth_pw & 4) {
-        /* Or by public key */
-        if (libssh2_userauth_publickey_fromfile(session, username, keyfile1,
-                                                keyfile2, password)) {
-            fprintf(stderr, "\tAuthentication by public key failed!\n");
-        } else {
-            fprintf(stderr, "\tAuthentication by public key succeeded.\n");
-        }
-    } else {
-        fprintf(stderr, "No supported authentication methods found!\n");
-    }
-  return 1;
 }
 
 int webssh2_requestshell() {
