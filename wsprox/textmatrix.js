@@ -84,6 +84,7 @@ function textmatrix_add_tx(x,y) {
     d.style.outline = "none";
     d.id = "l" + cy;
     d.contentEditable = true;
+    d.spellcheck = false;
     d.onpaste = function(t,e) {processpaste(t, e);};
     d.onselectstart = function() {console.debug("selectstart"); textmatrix_alluneditable()};
     d.onmousedown = function(e) {if(e.button == 0) {console.debug("selectstart"); textmatrix_alluneditable()}};
