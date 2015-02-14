@@ -186,6 +186,11 @@
     location.reload();
   }
 
+  function disconnected(err) {
+    alert("Disconnected");
+    location.reload();
+  }
+
   function processpaste (e, t) {
     if(e.preventDefault) {
       e.stopPropagation();

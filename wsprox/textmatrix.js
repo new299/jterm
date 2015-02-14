@@ -81,6 +81,7 @@ function textmatrix_add_tx(x,y) {
     d.style.padding       = 0;
     d.style.marginTop     = 0;
     d.style.marginBottom  = 0;
+    d.style.outline = "none";
     d.id = "l" + cy;
     d.contentEditable = true;
     d.onpaste = function(t,e) {processpaste(t, e);};
