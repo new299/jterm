@@ -6,32 +6,13 @@ import (
     "net"
     "fmt"
     //"time"
-    "io"
+    //"io"
 )
 
 var upgrader = websocket.Upgrader{
     ReadBufferSize:  1024,
     WriteBufferSize: 1024,
 }
-
-
-      
-func print_binary(s []byte) {
-  fmt.Printf("print b:");
-  for n := 0;n < len(s);n++ {
-    fmt.Printf("%d,",s[n]);
-  }
-  fmt.Printf("\n");
-}
-
-func address_decode(address_bin []byte) (string,string) {
-  
-  var host string = "127.0.0.1"
-  var port string = "22";
-
-  return host,port
-}
- 
 
 func forwardtcp(wsconn *websocket.Conn,conn net.Conn) {
 
@@ -40,8 +21,10 @@ func forwardtcp(wsconn *websocket.Conn,conn net.Conn) {
     tcpbuffer := make([]byte, 1024)
 
     n,err := conn.Read(tcpbuffer)
-    if err == io.EOF { fmt.Printf("TCP Read failed"); break; }
-    if err == nil {
+    if err != nil {
+      fmt.Printf("TCP Read failed")
+      return
+    } else {
       wsconn.WriteMessage(websocket.BinaryMessage,tcpbuffer[:n])
     }
   }
@@ -52,8 +35,10 @@ func forwardws (wsconn *websocket.Conn,conn net.Conn) {
  for {
     // Send pending data to tcp socket
     n,buffer,err := wsconn.ReadMessage()
-    if err == io.EOF { fmt.Printf("WS Read Failed %d",n); break; }
-    if err == nil {
+    if err != nil {
+      fmt.Printf("WS Read Failed %d",n)
+      return
+    } else {
       conn.Write(buffer)
     }
   }
@@ -72,18 +57,17 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
   n,c,err := wsconn.ReadMessage()
   if err != nil {
     fmt.Printf("address read error");
-    fmt.Printf("read %d bytes",n);  
+    fmt.Printf("read %d bytes",n);
+    return
   } else {
     address = string(c[:len(c)-1])
   }
 
   fmt.Printf("address: %s",address);
- 
 
-  //TODO: validate. Server can fall over here if input is incorrect
   conn, err := net.Dial("tcp", address)
   if err != nil {
-	// handle error
+    // handle error
     return
   }
 
