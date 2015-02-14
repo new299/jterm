@@ -171,6 +171,13 @@
     webvterm_damage_cb(0,rows,0,cols);
   };
 
+  function display_fingerprint() {
+    fingerprintstrptr = Module.ccall('webssh2_get_fingerprint','number',[],[]);
+    var fingerprintstr = Pointer_stringify(fingerprintstrptr);
+    var f = document.getElementById('fingerprint');
+    f.innerHTML = fingerprintstr;
+  }
+
   var firstrecv=1;
   function on_recv() {
     var len=1;
@@ -187,6 +194,7 @@
       doresize();
       firstrecv=0;
       detect_disconnect();
+      display_fingerprint();
       setTimeout(function() {doresize(); },500); // for some reason the first resize often fails, and we're stuck at 80 cols
     }
     Module.ccall('webvterm_flush_damage',null,[],[]);
@@ -268,6 +276,7 @@
 </div>
 
 <div id='ad' style="height:60px">
+  <div id='fingerprint' style="font-family: monospace; color:white; font-size:8px"></div>
   <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <!-- jterm -->
   <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-9449433064496325" data-ad-slot="3977486817"></ins>

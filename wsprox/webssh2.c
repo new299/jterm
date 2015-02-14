@@ -54,7 +54,7 @@ static void kbd_callback(const char *name, int name_len,
 
 unsigned long hostaddr;
 int rc, sock, i, auth_pw = 0;
-const char *fingerprint;
+char *fingerprint;
 char *userauthlist;
 LIBSSH2_SESSION *session;
 LIBSSH2_CHANNEL *channel;
@@ -106,12 +106,21 @@ int webssh2_fingerprint() {
      */
     fingerprint = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
     //fprintf(stderr, "Fingerprint: ");
-    //TODO: add this to interface
-    //for(i = 0; i < 20; i++) {
-        //fprintf(stderr, "%02X ", (unsigned char)fingerprint[i]);
-    //}
     //fprintf(stderr, "\n");
     return 0;
+}
+
+char fingerprint_str[128];
+const char *webssh2_get_fingerprint() {
+  int i=0;
+  fingerprint_str[0] = 0;
+  char *fpos = fingerprint_str;
+  for(i = 0; i < 20; i++) {
+    if(i != 19) sprintf(fpos, "%02X:", (unsigned char)fingerprint[i]);
+           else sprintf(fpos, "%02X" , (unsigned char)fingerprint[i]);
+    fpos += strlen(fpos);
+  }
+  return fingerprint_str;
 }
 
 void debug(char *str) {
