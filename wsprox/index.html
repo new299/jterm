@@ -161,12 +161,6 @@
     webvterm_damage_cb(0,rows,0,cols);
   };
 
-  function senddata() {
-    var data = document.getElementById('sendtext').value;
-    ssh_send(data);
-    document.getElementById('comms').innerHTML += "Sent: " + data + "<br>";
-  }
-
   var firstrecv=1;
   function on_recv() {
     var len=1;
@@ -192,8 +186,28 @@
     location.reload();
   }
 
+  function processpaste (e, t) {
+    if(e.preventDefault) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
 
+    if (e && e.clipboardData && e.clipboardData.getData) {
+      ssh_send(e.clipboardData.getData('text/plain'));
+      console.debug("pastetext: " + e.clipboardData.getData('text/plain'));
+      return false;
+    }
 
+    // following not required.
+    // redraw everything
+    setTimeout(function() {
+      var rows = textmatrix_get_rows();
+      var cols = textmatrix_get_cols();
+      webvterm_damage_cb(0,rows,0,cols);
+    },50); 
+
+    return false;
+  }
 
 </script>
 
@@ -205,6 +219,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <body style="background-color: #b0c4de;">
+
 <div class="container" id="logindisplay">
     <div class="row">
         <div class="col-md-offset-5 col-md-3">

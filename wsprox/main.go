@@ -63,7 +63,7 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
     address = string(c[:len(c)-1])
   }
 
-  fmt.Printf("address: %s",address);
+  fmt.Printf("address: %s\n",address);
 
   conn, err := net.Dial("tcp", address)
   if err != nil {
@@ -74,7 +74,6 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
   go forwardtcp(wsconn,conn)
   go forwardws(wsconn,conn)
 
-  fmt.Printf("websocket closed");
 }
 
 func main() {

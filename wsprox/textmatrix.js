@@ -68,6 +68,8 @@ function textmatrix_add_tx(x,y) {
     d.style.marginTop     = 0;
     d.style.marginBottom  = 0;
     d.id = "l" + cy;
+    d.contentEditable = true;
+    d.onpaste = function(t,e) {processpaste(t, e);};
     d.innerHTML = "AbcdefgA";
     var currentDiv = document.getElementById("tml");
     currentDiv.insertBefore(d, null);
