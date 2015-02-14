@@ -50,6 +50,20 @@ function textmatrix_add_px(x,y) {
   textmatrix_add_tx(textmatrix_cols,textmatrix_rows);
 }
 
+function textmatrix_alluneditable() {
+  for(var cy=0;cy<textmatrix_rows;cy++) {
+    var currentDiv = document.getElementById("l" + cy);
+    currentDiv.contentEditable = false;
+  }
+}
+
+function textmatrix_alleditable() {
+  for(var cy=0;cy<textmatrix_rows;cy++) {
+    var currentDiv = document.getElementById("l" + cy);
+    currentDiv.contentEditable = true;
+  }
+}
+
 function textmatrix_add_tx(x,y) {
 
   var c = document.getElementById("tml");
@@ -70,7 +84,10 @@ function textmatrix_add_tx(x,y) {
     d.id = "l" + cy;
     d.contentEditable = true;
     d.onpaste = function(t,e) {processpaste(t, e);};
-    d.innerHTML = "AbcdefgA";
+    d.onselectstart = function() {console.debug("selectstart"); textmatrix_alluneditable()};
+    d.onmousedown = function() {console.debug("selectstart"); textmatrix_alluneditable()};
+    d.onmouseup   = function() {console.debug("selectend"); textmatrix_alleditable()};
+  //  d.innerHTML = "AbcdefgA";
     var currentDiv = document.getElementById("tml");
     currentDiv.insertBefore(d, null);
 
