@@ -2,6 +2,7 @@ example buttons
 close button
 display fingerprint
 ssl support
+clear username and password from memory after use
 
 text underline/italics/bold (reverse implemented)
 ReGiS support

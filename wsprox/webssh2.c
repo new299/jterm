@@ -121,14 +121,7 @@ int webssh2_authcheck() {
 
     /* check what authentication methods are available */
     userauthlist = libssh2_userauth_list(session, username, strlen(username));
-    //rc = _libssh2_wait_socket(sess, entry_time);
 
-    //fprintf(stderr, "Session state auth: %d",(session->userauth_list_state));
-    //char buf[1024];
-    //sprintf(buf,"Session errno: %d",libssh2_session_last_errno(session));
-    //debug(buf);
-
-    //if(libssh2_session_last_errno(session) == LIBSSH2_ERROR_EAGAIN) return 0;
     if(userauthlist != NULL) {
       fprintf(stderr, "Authentication methods: %s\n", userauthlist);
       return 1;
@@ -140,7 +133,6 @@ int webssh2_authenticate() {
         /* We could authenticate via password */
         if (libssh2_userauth_password(session, username, password)) {
             fprintf(stderr, "\tAuthentication by password failed!\n");
-            //goto shutdown;
             return 0;
         } else {
             fprintf(stderr, "\tAuthentication by password succeeded.\n");
@@ -165,7 +157,6 @@ int webssh2_unusedjunkauth() {
         /* We could authenticate via password */
         if (libssh2_userauth_password(session, username, password)) {
             fprintf(stderr, "\tAuthentication by password failed!\n");
-//            goto shutdown;
         } else {
             fprintf(stderr, "\tAuthentication by password succeeded.\n");
         }
@@ -175,7 +166,6 @@ int webssh2_unusedjunkauth() {
                                                   &kbd_callback) ) {
             fprintf(stderr,
                 "\tAuthentication by keyboard-interactive failed!\n");
-//            goto shutdown;
         } else {
             fprintf(stderr,
                 "\tAuthentication by keyboard-interactive succeeded.\n");
@@ -185,13 +175,11 @@ int webssh2_unusedjunkauth() {
         if (libssh2_userauth_publickey_fromfile(session, username, keyfile1,
                                                 keyfile2, password)) {
             fprintf(stderr, "\tAuthentication by public key failed!\n");
-//            goto shutdown;
         } else {
             fprintf(stderr, "\tAuthentication by public key succeeded.\n");
         }
     } else {
         fprintf(stderr, "No supported authentication methods found!\n");
-//        goto shutdown;
     }
   return 1;
 }
@@ -215,13 +203,11 @@ int webssh2_setenv() {
 
 int webssh2_setterm() {
 
-
     /* Request a terminal with 'vanilla' terminal emulation
      * See /etc/termcap for more options
      */
     if (libssh2_channel_request_pty(channel, "xterm")) {
-        fprintf(stderr, "Failed requesting pty\n");
- //       goto skip_shell;
+      fprintf(stderr, "Failed requesting pty\n");
     }
   return 1;
 }
@@ -231,7 +217,6 @@ int webssh2_getshell() {
     /* Open a SHELL on that pty */
     if (libssh2_channel_shell(channel)) {
         fprintf(stderr, "Unable to request shell on allocated pty\n");
-//        goto shutdown;
       return 0;
     }
     return 1;
@@ -254,4 +239,8 @@ int webssh2_resize(int cols,int rows) {
   if(channel == 0) return 1;
   if(libssh2_channel_eof(channel)!=0) {return -1;}
   libssh2_channel_request_pty_size(channel,cols,rows);
+}
+
+int webssh2_channel_closed() {
+  return libssh2_channel_eof(channel);
 }

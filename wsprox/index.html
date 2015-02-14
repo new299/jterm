@@ -113,6 +113,15 @@
     }
   }
 
+  function detect_disconnect() {
+    var c = Module.ccall('webssh2_channel_closed','number',[],[]);
+    if(c != 0) { 
+      disconnected();
+    } else {
+      setTimeout(detect_disconnect,2000);
+    }
+  }
+
   function do_connect() {
     // add display
     textmatrix_add_px(window.innerWidth-hozmargin,window.innerHeight-lowermargin);
@@ -143,6 +152,7 @@
       ssh_send(char);
       return false
     }
+
   }
 
   window.onbeforeunload = function() {
@@ -176,6 +186,7 @@
     if(firstrecv==1) {
       doresize();
       firstrecv=0;
+      detect_disconnect();
       setTimeout(function() {doresize(); },500); // for some reason the first resize often fails, and we're stuck at 80 cols
     }
     Module.ccall('webvterm_flush_damage',null,[],[]);
@@ -186,7 +197,7 @@
     location.reload();
   }
 
-  function disconnected(err) {
+  function disconnected() {
     alert("Disconnected");
     location.reload();
   }
