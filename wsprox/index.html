@@ -132,6 +132,7 @@
     Module.ccall('webvterm_init',null,['number','number'],[cols,rows]);
 
     document.getElementById('logindisplay').style.display = 'none';
+    document.getElementById('heading').style.display = 'none';
     var serverad = document.getElementById('serverad').value;
     var port     = document.getElementById('port'    ).value;
     var username = document.getElementById('username').value;
@@ -269,7 +270,7 @@
 
 <body style="background-color: #b0c4de;">
  
-<div class="page-header">
+<div id="heading" class="page-header">
   <center><H1>Minaterm: web-based ssh with end-to-end encryption</H1></center>
   <center><h1><a href="faq.html">FAQ</a></h1></center>
 </div>
