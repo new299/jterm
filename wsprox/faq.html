@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Bootstrap FAQ Template | PrepBootstrap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="page-header">
+    <h1>Minaterm FAQ <small></small></h1>
+</div>
+
+<!-- Bootstrap FAQ - START -->
+<div class="container">
+    <br />
+
+    <div class="panel-group" id="accordion">
+        <div class="faqHeader">General questions</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#what">What is this?</a>
+                </h4>
+            </div>
+            <div id="what" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    Minaterm is a free web-based ssh client. It lets you connect to ssh servers over the Internet via your web browser. If you don't know what ssh is, you probably wont be very interested in Minaterm anyway. But you can read about ssh on <a href="http://en.wikipedia.org/wiki/Secure_Shell">wikipedia</a>.
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#endtoend">End-to-end encryption you say?</a>
+                </h4>
+            </div>
+            <div id="endtoend" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  Minaterm uses libssh2 (compiled to Javascript using Emscripten) to create a full ssh client in your browser. Your session data is encrypted in the browser and never touches the Minaterm server in unencrypted form. Unless the client-side Javascript is tampered with by a malicious 3rd party it should not be possible to intercept the traffic on our servers or as in flight. The hostname to which you want to connect is not encrypted, however Minaterm also supports SSL, and if you connect using HTTPS this information will also be encrypted in flight. The hostname could potentially be intercepted on the Minaterm server, however this information is not currently logged. Outbound connections are currently routed over Tor (except for connections to the local Minaterm server used for the Eliza demo).
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#theory">That sounds great... in theory</a>
+                </h4>
+            </div>
+            <div id="theory" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  In it's present form Minaterm is largely a technical demonstration of what's possible. If you'd like to support Minaterm please consider <a href="#dotate">donating</a> or applying <a href="#buy">registering your interest</a> in a paid service. 10% of funds raised will be earmarked for 3rd party auditing of the Minaterm stack (starting with Minaterm and libssh2).
+                </div>
+            </div>
+        </div>
+
+        <div class="faqHeader">How to help</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#donate">Donate</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  You can donate via Bitcoin (17rXvaWKXNd6TR8suh8UJmMMhCtbvh216e) or Paypal (new299@zepler.org). Alternatively you can register your interested in a <a href="#buy">paid version of the platform</a>. Donating will allow me to spend more time developing the platform, and if funding reaches a sufficient level remove advertising. 10% of funds raised will also be put aside to hire 3rd consultants to audit the software.
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#buy">I'd like to give you money (for something)</a>
+                </h4>
+            </div>
+            <div id="buy" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  Great! I need money! Depending on interest I'm considering a paid version of Minaterm. Please register your interest <a href="">here</a>. If enough people are interested I'll send a single email to registered users when the paid service is available (after which the list will be deleted). There are a number of features I'm considering for the paid service:
+<ul>
+  <li>Optionally don't route connections over Tor (lower latency)</li>
+  <li>Geographically distributed servers (also help with latency)</li>
+  <li>Download files via ssh in the browser</li>
+  <li>Support for key based authentication</li>
+  <li>Rendering graphics in the terminal using ReGIS,Sixels or inline image rendering</li>
+  <li>Support for different fonts, possibly including Profont and Terminus</li>
+  <li>Terminal Unicode support</li>
+</ul> 
+
+If you have other suggestions please <a href="#contact">get in touch</a>.
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#contact">Contact Me</a>
+                </h4>
+            </div>
+            <div id="collapseFive" class="panel-collapse collapse in">
+                <div class="panel-body">
+                   You can email me at new@sgenomics.org, alternatively I'm <a href="http://twitter.com/new299">on twitter</a> and <a href="https://www.linkedin.com/profile/view?id=17689004">LinkedIn</a>.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .faqHeader {
+        font-size: 27px;
+        margin: 20px;
+    }
+
+    .panel-heading [data-toggle="collapse"]:after {
+        font-family: 'Glyphicons Halflings';
+    //    content: "\e072"; /* "play" icon */
+        float: right;
+        color: #F58723;
+        font-size: 18px;
+        line-height: 22px;
+        /* rotate "play" icon from > (right arrow) to down arrow */
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+
+    .panel-heading [data-toggle="collapse"].collapsed:after {
+        /* rotate "play" icon from > (right arrow) to ^ (up arrow) */
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+        color: #454444;
+    }
+</style>
+
+<!-- Bootstrap FAQ - END -->
+
+</div>
+
+</body>
+</html>

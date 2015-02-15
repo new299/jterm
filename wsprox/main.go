@@ -12,6 +12,7 @@ import (
     "bytes"
     "errors"
     "strconv"
+    "sync"
 )
   
 var usesocks string
@@ -149,11 +150,16 @@ func main() {
   http.HandleFunc("/con", wsProxyHandler)
   http.Handle("/", httpgzip.NewHandler(http.FileServer(http.Dir("."))))
 
+
+  var wg sync.WaitGroup
+  wg.Add(1)
   go func() {
+    defer wg.Done()
     err := http.ListenAndServe(":80", nil)
     if err != nil {
       panic("Error: " + err.Error())
     }
+    
   }()
 
   if usessl == true {
@@ -165,5 +171,7 @@ func main() {
   } else {
     fmt.Printf("SSL not enabled\n")
   }
+
+  wg.Wait()
 
 }
