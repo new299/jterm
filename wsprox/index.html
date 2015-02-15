@@ -152,14 +152,39 @@
       ssh_send(char);
       return false
     }
+  }
 
+  function do_connect_openshells() {
+    document.getElementById('serverad').value = "openshells.net";
+    document.getElementById('port'    ).value = "22";
+    document.getElementById('username').value = "signup";
+    document.getElementById('password').value = "wanker66";
+    do_connect();
+  }
+  
+  function do_connect_nethack() {
+    document.getElementById('serverad').value = "slashem.crash-override.net";
+    document.getElementById('port'    ).value = "22";
+    document.getElementById('username').value = "slashem";
+    document.getElementById('password').value = "slashem";
+    do_connect();
+  }
+
+  function do_connect_eliza() {
+    document.getElementById('serverad').value = "localhost";
+    document.getElementById('port'    ).value = "22";
+    document.getElementById('username').value = "eliza";
+    document.getElementById('password').value = "eliza";
+    do_connect();
   }
 
   window.onbeforeunload = function() {
     jss_close();
   };
 
-  window.onresize = function(event) { doresize(); }
+  window.onresize = function(event) {
+   if(firstrecv==0) { doresize(); }
+  }
 
 
   function doresize() {
@@ -245,6 +270,7 @@
 <body style="background-color: #b0c4de;">
 
 <div class="container" id="logindisplay">
+    <center><H1>Minaterm: web-based ssh with end-to-end encryption</H1></center>
     <div class="row">
         <div class="col-md-offset-5 col-md-3">
             <div class="form-login">
@@ -267,22 +293,44 @@
             </span>
             </div>
             </div>
+
         
         </div>
     </div>
+  </br>
+
+  <div class="row">
+     <div class="col-md-offset-4 col-md-5">
+       <div class="form-login">
+         <h4>Or try one of these</h4>
+         <div class="row">
+           <div class="col-md-12">
+             <div class="wrapper"><span class="group-btn">
+             <a href="#" onclick="do_connect_openshells()" class="btn btn-primary btn-md">OpenShells</a>
+             <a href="#" onclick="do_connect_nethack()" class="btn btn-primary btn-md">Nethack</a>
+             <a href="#" onclick="do_connect_eliza()" class="btn btn-primary btn-md">Eliza</a>
+             </span></div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
 </div>
 <div width=100%>
 <div style="font-family: monospace; white-space: pre; margin: 0 auto;" id='tml'></div>
 </div>
 
-<div id='ad' style="height:60px">
-  <div id='fingerprint' style="font-family: monospace; color:white; font-size:8px"></div>
-  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <!-- jterm -->
-  <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-9449433064496325" data-ad-slot="3977486817"></ins>
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
+<div class="container" id="footer" style="height:60px position:fixed; bottom:0px; margin:0; padding:0; width: 100%;">
+
+  <div id='fingerprint' align="left" style="position:fixed; bottom:0px; font-family: monospace; color:white; font-size:8px"></div>
+  <div align="right">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- jterm -->
+    <ins class="adsbygoogle" style="display:inline-block;width:468px;height:60px" data-ad-client="ca-pub-9449433064496325" data-ad-slot="3977486817"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
 </div>
 
 </body>

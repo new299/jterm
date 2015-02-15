@@ -2,16 +2,16 @@ package main
  
 import (
     "github.com/gorilla/websocket"
+    "github.com/daaku/go.httpgzip"
     "net/http"
     "net"
     "fmt"
     "flag"
     "strings"
     "encoding/binary"
-	"bytes"
-	"errors"
-    //"time"
-    //"io"
+    "bytes"
+    "errors"
+    "strconv"
 )
   
 var usesocks string
@@ -21,17 +21,23 @@ var upgrader = websocket.Upgrader{
     WriteBufferSize: 1024,
 }
 
-func socks_connect(conn net.Conn, domain string) (bool, error) {
+func socks_connect(conn net.Conn, address string) (error) {
+
+	host, portstr, err := net.SplitHostPort(address)
+	port, err2 := strconv.Atoi(portstr)
+        if err2 != nil {
+          return errors.New("Unable to parse port")
+        }
+
 	version := []byte{0x04} // socks version 4
 	cmd := []byte{0x01}     // socks stream mode
-	port := 22              // destination http port
 	buffer := bytes.NewBuffer([]byte{})
 	binary.Write(buffer, binary.BigEndian, version)
 	binary.Write(buffer, binary.BigEndian, cmd)
-	binary.Write(buffer, binary.BigEndian, uint16(port))                   // pad port with 0x00
-	binary.Write(buffer, binary.BigEndian, []byte{0x00, 0x00, 0x00, 0x01}) // fake ip address forces socks4a to resolve the domain below using the socks protocol
+	binary.Write(buffer, binary.BigEndian, uint16(port))
+	binary.Write(buffer, binary.BigEndian, []byte{0x00, 0x00, 0x00, 0x01})
 	binary.Write(buffer, binary.BigEndian, []byte{0x00})
-	binary.Write(buffer, binary.BigEndian, []byte(domain))
+	binary.Write(buffer, binary.BigEndian, []byte(host))
 	binary.Write(buffer, binary.BigEndian, []byte{0x00})
 	binary.Write(conn, binary.BigEndian, buffer.Bytes())
 	
@@ -39,16 +45,16 @@ func socks_connect(conn net.Conn, domain string) (bool, error) {
 	count, err := conn.Read(data)
 
         if err != nil {
-          return false, errors.New("Unable to connect to socks server.")
+          return errors.New("Unable to connect to socks server.")
         }
         if count == 0 {
-          return false, errors.New("Unable to connect to socks server.")
+          return errors.New("Unable to connect to socks server.")
         }
 	if data[1] == 0x5a { // success
-		return true,nil
+		return nil
 	}
         
-	return false, errors.New("Unable to connect to socks server.")
+	return errors.New("Unable to connect to socks server.")
 }
 
 func forwardtcp(wsconn *websocket.Conn,conn net.Conn) {
@@ -72,14 +78,12 @@ func forwardws (wsconn *websocket.Conn,conn net.Conn) {
  var first = true
  for {
     // Send pending data to tcp socket
-    n,buffer,err := wsconn.ReadMessage()
+    _,buffer,err := wsconn.ReadMessage()
     if err != nil {
-      fmt.Printf("WS Read Failed %d",n)
       return
     } else {
       if first == true {
         str := string(buffer[:])
-        fmt.Printf("buffer: %s\n",str)
         if strings.Contains(str,"SSH-2.0-libssh") == false {
           return
         }
@@ -100,21 +104,26 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
 
   // get connection address and port
   var address string;
-  n,c,err := wsconn.ReadMessage()
+  _,c,err := wsconn.ReadMessage()
   if err != nil {
     fmt.Printf("address read error");
-    fmt.Printf("read %d bytes",n);
     return
   } else {
     address = string(c[:len(c)-1])
   }
 
   var conn net.Conn
-  if usesocks == "" {
+  if (usesocks == "") || strings.Contains(address,"localhost") {
     conn, err = net.Dial("tcp", address)
   } else {
     conn, err = net.Dial("tcp", usesocks)
-    socks_connect(conn, address)
+    if err != nil {
+      fmt.Printf("Socks server connection error");
+    }
+    err = socks_connect(conn, address)
+    if err != nil {
+      fmt.Printf("Socks proxy connection error");
+    }
   }
 
   if err != nil {
@@ -137,10 +146,8 @@ func main() {
   flag.StringVar(&usesocks, "usesocks", ""              , "Forward traffic via a SOCKS server")
   flag.Parse()
 
-  fmt.Printf("ussssl %s\n",usessl)
-
   http.HandleFunc("/con", wsProxyHandler)
-  http.Handle("/", http.FileServer(http.Dir(".")))
+  http.Handle("/", httpgzip.NewHandler(http.FileServer(http.Dir("."))))
 
   go func() {
     err := http.ListenAndServe(":80", nil)
