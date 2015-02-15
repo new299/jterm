@@ -7,7 +7,9 @@ import (
     "fmt"
     "flag"
     "strings"
-    "./socks"
+    "encoding/binary"
+	"bytes"
+	"errors"
     //"time"
     //"io"
 )
@@ -17,6 +19,36 @@ var usesocks string
 var upgrader = websocket.Upgrader{
     ReadBufferSize:  1024,
     WriteBufferSize: 1024,
+}
+
+func socks_connect(conn net.Conn, domain string) (bool, error) {
+	version := []byte{0x04} // socks version 4
+	cmd := []byte{0x01}     // socks stream mode
+	port := 22              // destination http port
+	buffer := bytes.NewBuffer([]byte{})
+	binary.Write(buffer, binary.BigEndian, version)
+	binary.Write(buffer, binary.BigEndian, cmd)
+	binary.Write(buffer, binary.BigEndian, uint16(port))                   // pad port with 0x00
+	binary.Write(buffer, binary.BigEndian, []byte{0x00, 0x00, 0x00, 0x01}) // fake ip address forces socks4a to resolve the domain below using the socks protocol
+	binary.Write(buffer, binary.BigEndian, []byte{0x00})
+	binary.Write(buffer, binary.BigEndian, []byte(domain))
+	binary.Write(buffer, binary.BigEndian, []byte{0x00})
+	binary.Write(conn, binary.BigEndian, buffer.Bytes())
+	
+	data := make([]byte, 8) // socks responses are 8 bytes
+	count, err := conn.Read(data)
+
+        if err != nil {
+          return false, errors.New("Unable to connect to socks server.")
+        }
+        if count == 0 {
+          return false, errors.New("Unable to connect to socks server.")
+        }
+	if data[1] == 0x5a { // success
+		return true,nil
+	}
+        
+	return false, errors.New("Unable to connect to socks server.")
 }
 
 func forwardtcp(wsconn *websocket.Conn,conn net.Conn) {
@@ -82,7 +114,7 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
     conn, err = net.Dial("tcp", address)
   } else {
     conn, err = net.Dial("tcp", usesocks)
-    socks.Connect(conn, address)
+    socks_connect(conn, address)
   }
 
   if err != nil {
