@@ -5,6 +5,7 @@ import (
     "net/http"
     "net"
     "fmt"
+    "flag"
     //"time"
     //"io"
 )
@@ -77,10 +78,34 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+  var usessl bool
+  var sslcert string
+  var sslkey string
+  flag.BoolVar  (&usessl  , "usessl"  , false      , "use ssl?")
+  flag.StringVar(&sslcert, "sslcert", "cert.pem", "SSL Certificate filename")
+  flag.StringVar(&sslkey , "sslkey",  "key.pem" , "SSL Key filename")
+  flag.Parse()
+
+  fmt.Printf("ussssl %s\n",usessl)
+
   http.HandleFunc("/con", wsProxyHandler)
   http.Handle("/", http.FileServer(http.Dir(".")))
-  err := http.ListenAndServe(":8080", nil)
-  if err != nil {
-    panic("Error: " + err.Error())
+
+  go func() {
+    err := http.ListenAndServe(":80", nil)
+    if err != nil {
+      panic("Error: " + err.Error())
+    }
+  }()
+
+  if usessl == true {
+    fmt.Printf("SSL enabled\n")
+    err := http.ListenAndServeTLS(":443", sslcert, sslkey, nil)
+    if err != nil {
+      panic("Error: " + err.Error())
+    }
+  } else {
+    fmt.Printf("SSL not enabled\n")
   }
+
 }

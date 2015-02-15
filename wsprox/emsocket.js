@@ -82,21 +82,35 @@ function jss_socket(domain,type,protocol) {
   return 1;
 }
 
-function jss_gethostbyname(name) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", "http://localhost:8080/dns?name=" + name, false);
-  xmlHttp.send(null);
-  console.debug("hostname: " + xmlHttp.responseText);
-  return xmlHttp.responseText;
-}
+//function jss_gethostbyname(name) {
+//  var xmlHttp = new XMLHttpRequest();
+//  xmlHttp.open("GET","http://localhost:8080/dns?name=" + name, false);
+//  xmlHttp.send(null);
+//  console.debug("hostname: " + xmlHttp.responseText);
+//  return xmlHttp.responseText;
+//}
 
 function jss_set_server_address(addr) {
   m_server_address = addr;
 }
 
+function get_wsurl() {
+  var loc = window.location, new_uri;
+  if (loc.protocol === "https:") {
+    new_uri = "wss:";
+  } else {
+    new_uri = "ws:";
+  }
+  new_uri += "//" + loc.host;
+  new_uri += loc.pathname + "con";
+  console.debug("ws url: " + new_uri);
+  return new_uri;
+}
+
 function jss_connect(sockfd,addr,addrlen) {
 
-  serversocket = new WebSocket("ws://localhost:8080/con");
+  //serversocket = new WebSocket("ws://localhost:8080/con");
+  serversocket = new WebSocket(get_wsurl());
   serversocket.binaryType = "arraybuffer";
   serversocket.onopen = function() {
 
