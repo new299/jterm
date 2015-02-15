@@ -6,9 +6,13 @@ import (
     "net"
     "fmt"
     "flag"
+    "strings"
+    "./socks"
     //"time"
     //"io"
 )
+  
+var usesocks string
 
 var upgrader = websocket.Upgrader{
     ReadBufferSize:  1024,
@@ -33,6 +37,7 @@ func forwardtcp(wsconn *websocket.Conn,conn net.Conn) {
 
 func forwardws (wsconn *websocket.Conn,conn net.Conn) {
 
+ var first = true
  for {
     // Send pending data to tcp socket
     n,buffer,err := wsconn.ReadMessage()
@@ -40,6 +45,14 @@ func forwardws (wsconn *websocket.Conn,conn net.Conn) {
       fmt.Printf("WS Read Failed %d",n)
       return
     } else {
+      if first == true {
+        str := string(buffer[:])
+        fmt.Printf("buffer: %s\n",str)
+        if strings.Contains(str,"SSH-2.0-libssh") == false {
+          return
+        }
+        first = false
+      }
       conn.Write(buffer)
     }
   }
@@ -64,9 +77,14 @@ func wsProxyHandler(w http.ResponseWriter, r *http.Request) {
     address = string(c[:len(c)-1])
   }
 
-  fmt.Printf("address: %s\n",address);
+  var conn net.Conn
+  if usesocks == "" {
+    conn, err = net.Dial("tcp", address)
+  } else {
+    conn, err = net.Dial("tcp", usesocks)
+    socks.Connect(conn, address)
+  }
 
-  conn, err := net.Dial("tcp", address)
   if err != nil {
     // handle error
     return
@@ -81,9 +99,10 @@ func main() {
   var usessl bool
   var sslcert string
   var sslkey string
-  flag.BoolVar  (&usessl  , "usessl"  , false      , "use ssl?")
-  flag.StringVar(&sslcert, "sslcert", "cert.pem", "SSL Certificate filename")
-  flag.StringVar(&sslkey , "sslkey",  "key.pem" , "SSL Key filename")
+  flag.BoolVar  (&usessl  , "usessl"  , false           , "use ssl?")
+  flag.StringVar(&sslcert , "sslcert" , "cert.pem"      , "SSL Certificate filename")
+  flag.StringVar(&sslkey  , "sslkey"  , "key.pem"       , "SSL Key filename")
+  flag.StringVar(&usesocks, "usesocks", ""              , "Forward traffic via a SOCKS server")
   flag.Parse()
 
   fmt.Printf("ussssl %s\n",usessl)
