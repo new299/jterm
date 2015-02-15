@@ -200,7 +200,7 @@
     fingerprintstrptr = Module.ccall('webssh2_get_fingerprint','number',[],[]);
     var fingerprintstr = Pointer_stringify(fingerprintstrptr);
     var f = document.getElementById('fingerprint');
-    f.innerHTML = fingerprintstr;
+    f.innerHTML = "Fingerprint: " + fingerprintstr;
   }
 
   var firstrecv=1;
@@ -268,9 +268,14 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 <body style="background-color: #b0c4de;">
-
+ 
+<div class="page-header">
+  <center><H1>Minaterm: web-based ssh with end-to-end encryption</H1></center>
+  <center><h1><a href="faq.html">FAQ</a></h1></center>
+</div>
+   
 <div class="container" id="logindisplay">
-    <center><H1>Minaterm: web-based ssh with end-to-end encryption</H1></center>
+
     <div class="row">
         <div class="col-md-offset-5 col-md-3">
             <div class="form-login">
