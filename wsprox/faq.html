@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Minaterm FAQ</title>
+    <title>Bootstrap FAQ Template | PrepBootstrap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
@@ -44,7 +44,7 @@
             </div>
             <div id="endtoend" class="panel-collapse collapse in">
                 <div class="panel-body">
-                  Minaterm uses libssh2 (compiled to Javascript using Emscripten) to create a full ssh client in your browser. Your session data is encrypted in the browser and never touches the Minaterm server in unencrypted form. Unless the client-side Javascript is tampered with by a malicious 3rd party it should not be possible to intercept the traffic on our servers or as in flight. The hostname to which you want to connect is not encrypted, however Minaterm also supports SSL, and if you connect using HTTPS this information will also be encrypted in flight. The hostname could potentially be intercepted on the Minaterm server, however this information is not currently logged. Outbound connections are currently routed over Tor (except for connections to the local Minaterm server used for the Eliza demo).
+                  Minaterm uses libssh2 (compiled to Javascript using Emscripten) to create a full ssh client in your browser. Your session data is encrypted in the browser and never touches the Minaterm server in unencrypted form. Unless the client-side Javascript is tampered with by a malicious 3rd party it should not be possible to intercept the traffic on our servers or in flight. However, Minaterm is presently a proof of concept, and I'd advise against using it for anything security sensitive. The hostname to which you want to connect is not encrypted, however Minaterm also supports SSL, and if you connect using HTTPS this information will also be encrypted in flight. The hostname could potentially be intercepted on the Minaterm server, however this information is not currently logged. Outbound connections are currently routed over Tor (except for connections to the local Minaterm server used for the Eliza demo).
                 </div>
             </div>
         </div>
@@ -56,12 +56,52 @@
             </div>
             <div id="theory" class="panel-collapse collapse in">
                 <div class="panel-body">
-                  In it's present form Minaterm is largely a technical demonstration of what's possible. If you'd like to support Minaterm please consider <a href="#dotate">donating</a> or applying <a href="#buy">registering your interest</a> in a paid service. 10% of funds raised will be earmarked for 3rd party auditing of the Minaterm stack (starting with Minaterm and libssh2).
+                  In it's present form Minaterm is largely a technical demonstration. If you'd like to support Minaterm please consider <a href="#dotate">donating</a> or <a href="#buy">registering your interest</a> in a paid service. 10% of funds raised will be earmarked for 3rd party auditing of the Minaterm stack (starting with Minaterm and libssh2).
                 </div>
             </div>
         </div>
 
-        <div class="faqHeader">How to help</div>
+        <div class="faqHeader">Issues</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#slow">It's very slow</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                The Javascript itself is reasonably fast, a local install is a little slower than a native terminal, but quite usable. However, the instance running at www.minaterm.com routes all outbound connections over Tor, this will likely cause performance issues (particularly under load). The Eliza demo runs on the local host and should give a better representation of expected performance. This server is also located in Sweden, trans-atlanic/pacific connections may add additional latency. If you'd like me to create a private installation for you, please <a href="#contact">contact me</a>.
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#rendering">Rendering Issues</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                There are a few known rendering issues, certain versions of Firefox appear not to render the cursor on an otherwise blank line. A white highlight appears on the left side of the screen on ocassion. This can be fixed by resizing the window. If you notice any other rendering issues please <a href="#contact">contact me</a> or create a <a href="#code">github issue</a>.
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#terrible">Everyting is terrible</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body">
+                Thanks of auditing the code! Please submit <a href="#code">pull requests</a> below. This is pretty much my first web-project and first golang project (I mostly work in C/C++). I'd appriciate constructive comments and suggestions.
+                </div>
+            </div>
+        </div>
+
+        <div class="faqHeader">Help</div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -70,19 +110,19 @@
             </div>
             <div id="collapseTwo" class="panel-collapse collapse in">
                 <div class="panel-body">
-                  You can donate via Bitcoin (17rXvaWKXNd6TR8suh8UJmMMhCtbvh216e) or Paypal (new299@zepler.org). Alternatively you can register your interested in a <a href="#buy">paid version of the platform</a>. Donating will allow me to spend more time developing the platform, and if funding reaches a sufficient level remove advertising. 10% of funds raised will also be put aside to hire 3rd consultants to audit the software.
+                  You can donate via Bitcoin (17rXvaWKXNd6TR8suh8UJmMMhCtbvh216e) or Paypal (new299@zepler.org). Alternatively you can register your interest in a <a href="https://docs.google.com/forms/d/11_7nkRhZsr8e4Yj10cUA5UlvoM9sFj7uWa7dXFBwuTk/viewform?usp=send_form">paid version of the platform</a>. Donating will allow me to spend more time developing the platform, and if funding reaches a sufficient level remove advertising. 10% of funds raised will also be put aside to hire 3rd party consultants to audit the software.
                 </div>
             </div>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#buy">I'd like to give you money (for something)</a>
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#buy">I'd like to pay for this</a>
                 </h4>
             </div>
             <div id="buy" class="panel-collapse collapse in">
                 <div class="panel-body">
-                  Great! I need money! Depending on interest I'm considering a paid version of Minaterm. Please register your interest <a href="">here</a>. If enough people are interested I'll send a single email to registered users when the paid service is available (after which the list will be deleted). There are a number of features I'm considering for the paid service:
+                  Great! I need money! Depending on interest I'm considering a paid version of Minaterm. Please register your interest <a href="https://docs.google.com/forms/d/11_7nkRhZsr8e4Yj10cUA5UlvoM9sFj7uWa7dXFBwuTk/viewform?usp=send_form">here</a>. If enough people are interested I'll send a single email to registered users when the paid service is available (after which the list will be deleted). There are a number of features I'm considering for the paid service:
 <ul>
   <li>Optionally don't route connections over Tor (lower latency)</li>
   <li>Geographically distributed servers (also help with latency)</li>
@@ -100,12 +140,24 @@ If you have other suggestions please <a href="#contact">get in touch</a>.
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#code">Get the code</a>
+                </h4>
+            </div>
+            <div id="buy" class="panel-collapse collapse in">
+                <div class="panel-body">
+                All the sourcecode is on <a href="http://github.com/new299/jterm">github</a>. It's in dire need of refactoring. As this is my first web/golang project there's likely a lot that could be improved. Contributions are welcome.
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#contact">Contact Me</a>
                 </h4>
             </div>
             <div id="collapseFive" class="panel-collapse collapse in">
                 <div class="panel-body">
-                   You can email me at new@sgenomics.org, alternatively I'm <a href="http://twitter.com/new299">on twitter</a> and <a href="https://www.linkedin.com/profile/view?id=17689004">LinkedIn</a>. If you feel Minaterm is being used inappropriately and you'd like your server blacklisted, please also contact me via the email listed or abuse@minaterm.com.
+                   You can email me at new@sgenomics.org, alternatively I'm <a href="http://twitter.com/new299">on twitter</a> and <a href="https://www.linkedin.com/profile/view?id=17689004">LinkedIn</a>. You're also most welcome to browse my <a href="41j.com">blog</a>.
                 </div>
             </div>
         </div>
